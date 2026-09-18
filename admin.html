@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — University of Leicester Bangla Society</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..700&family=Karla:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#154024;
+  --forest-deep:#0C2916;
+  --forest-glow:#1E5A34;
+  --rust:#AA3E21;
+  --rust-bright:#C74A27;
+  --cream:#F3E7C8;
+  --gold:#E08A2E;
+  --gold-soft:#F0B15E;
+  --ink:#14261B;
+
+  --bg:#FAF4E6;
+  --fg:var(--ink);
+  --muted:rgba(20,38,27,.68);
+  --rule:rgba(20,38,27,.16);
+  --rule-strong:rgba(20,38,27,.3);
+  --panel:#F3EAD6;
+  --card:#FFFDF7;
+  --accent:var(--forest);
+  --meta:var(--rust-bright);
+  --grad:linear-gradient(170deg,#FCF7EC 0%,#F6EDD9 34%,#EFE4C6 68%,#F8F1E1 100%);
+  --shadow:0 18px 40px rgba(20,38,27,.12);
+  --shadow-lg:0 30px 70px rgba(20,38,27,.18);
+
+  --display:"Fraunces","Iowan Old Style",Georgia,"Times New Roman",serif;
+  --text:"Karla","Segoe UI",system-ui,-apple-system,sans-serif;
+  --ease:cubic-bezier(.2,.8,.3,1);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E2D19; --fg:#F1E8D3; --muted:rgba(241,232,211,.68);
+    --rule:rgba(241,232,211,.16); --rule-strong:rgba(241,232,211,.34);
+    --panel:#123720; --card:#143C24; --accent:#8FC79E; --meta:#E8A85A;
+    --grad:linear-gradient(170deg,#11361E 0%,#0C2716 38%,#0A2113 66%,#10331D 100%);
+    --shadow:0 18px 40px rgba(0,0,0,.35); --shadow-lg:0 30px 70px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E2D19; --fg:#F1E8D3; --muted:rgba(241,232,211,.68);
+  --rule:rgba(241,232,211,.16); --rule-strong:rgba(241,232,211,.34);
+  --panel:#123720; --card:#143C24; --accent:#8FC79E; --meta:#E8A85A;
+  --grad:linear-gradient(170deg,#11361E 0%,#0C2716 38%,#0A2113 66%,#10331D 100%);
+  --shadow:0 18px 40px rgba(0,0,0,.35); --shadow-lg:0 30px 70px rgba(0,0,0,.5);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--fg);
+  background:var(--bg);background-image:var(--grad);background-attachment:fixed;
+  font-family:var(--text);font-size:clamp(18px,1.2vw + 15px,21px);line-height:1.68;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+a{color:inherit}
+::selection{background:var(--gold);color:#2A1A06}
+:focus-visible{outline:2.5px solid var(--gold);outline-offset:3px;border-radius:4px}
+.wrap{width:min(1120px,92vw);margin-inline:auto}
+
+/* nav */
+.nav{
+  position:sticky;top:0;z-index:60;color:var(--cream);
+  background:rgba(12,41,22,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(243,231,200,.1);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.6rem 0}
+.brand{display:flex;align-items:center;gap:.65rem;text-decoration:none;min-width:0}
+.brand img{width:46px;height:46px;flex:none;transition:transform .5s var(--ease)}
+.brand:hover img{transform:rotate(-8deg) scale(1.06)}
+.brand span{font-family:var(--display);font-weight:500;font-size:1.18rem;line-height:1.1}
+.brand span small{display:block;font-family:var(--text);font-weight:700;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;opacity:.7;margin-bottom:.12rem}
+.nav-links{display:flex;gap:.2rem;list-style:none;margin:0;padding:0;font-size:1.02rem;font-weight:600}
+.nav-links a{
+  position:relative;display:block;text-decoration:none;padding:.55rem .9rem;border-radius:999px;
+  transition:background-color .2s ease,color .2s ease;white-space:nowrap;
+}
+.nav-links a::after{
+  content:"";position:absolute;left:.75rem;right:.75rem;bottom:.25rem;height:1.5px;
+  background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease);
+}
+.nav-links a:hover{background:rgba(243,231,200,.08)}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-links a.active{color:var(--gold-soft)}
+.nav-toggle{display:none;background:none;border:1.4px solid rgba(243,231,200,.35);color:inherit;font:inherit;font-weight:600;border-radius:999px;padding:.35rem .85rem;cursor:pointer}
+@media (max-width:960px){
+  .nav-toggle{display:block}
+  .nav-links{
+    display:none;position:absolute;left:0;right:0;top:100%;
+    background:rgba(12,41,22,.97);flex-direction:column;gap:0;
+    padding:.5rem 4vw 1rem;border-top:1px solid rgba(243,231,200,.14);
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{padding:.75rem .4rem;border-radius:0;border-bottom:1px solid rgba(243,231,200,.1)}
+  .nav-links a::after{display:none}
+}
+@media (max-width:420px){.brand span{font-size:.9rem}.brand img{width:32px;height:32px}}
+
+/* page header */
+.pagehead{
+  position:relative;color:var(--cream);background:var(--forest);
+  background-image:radial-gradient(110% 80% at 80% 0%,#1E5A34 0%,#154024 42%,#0C2916 100%);
+  padding:clamp(2.4rem,5vw,3.6rem) 0;
+}
+.matra{border-top:1.8px solid rgba(243,231,200,.32);padding-top:1rem;transform-origin:left center;max-width:60ch}
+.kicker{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--text);font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:.7rem}
+.kicker::before{content:"";width:22px;height:2px;background:currentColor;border-radius:2px}
+.pagehead h1{font-family:var(--display);font-weight:400;font-size:clamp(2.1rem,4.4vw,3rem);line-height:1.1;margin:0 0 .6rem;letter-spacing:-.01em}
+.pagehead h1 em{font-style:italic;color:var(--gold-soft)}
+.pagehead p{margin:0;max-width:54ch;color:rgba(243,231,200,.82);font-size:1.05rem}
+
+/* sections */
+.section{padding:clamp(3rem,6.5vw,4.6rem) 0}
+h2{font-family:var(--display);font-weight:400;font-size:clamp(1.5rem,3vw,2rem);line-height:1.15;margin:0 0 1.2rem;letter-spacing:-.01em}
+
+/* password gate */
+.gate{min-height:52vh;display:grid;place-items:center;padding:3rem 4vw}
+.gate-card{
+  max-width:400px;width:100%;background:var(--card);border:1.5px solid var(--rule);
+  border-radius:20px;padding:2.2rem 2rem;box-shadow:var(--shadow-lg);text-align:center;
+}
+.gate-card .lock{width:44px;height:44px;margin:0 auto 1rem;display:grid;place-items:center;border-radius:50%;background:var(--forest);color:var(--cream)}
+.gate-card .lock svg{width:20px;height:20px}
+.gate-card h2{margin:0 0 .5rem;font-size:1.4rem}
+.gate-card p{margin:0 0 1.4rem;color:var(--muted);font-size:.95rem}
+.gate-card form{display:flex;flex-direction:column;gap:.85rem}
+.gate-card input{
+  font:inherit;font-size:1rem;padding:.8rem 1rem;border-radius:12px;
+  border:1.6px solid var(--rule-strong);background:var(--bg);color:var(--fg);text-align:center;letter-spacing:.1em;
+}
+.gate-card input:focus-visible{outline:2.5px solid var(--gold);outline-offset:2px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;text-decoration:none;
+  padding:.85rem 1.5rem;border-radius:999px;font-weight:700;font-size:1rem;cursor:pointer;
+  border:1.6px solid transparent;background:var(--rust-bright);color:#fff;
+  transition:transform .2s var(--ease),background-color .2s ease;
+}
+.btn:hover{transform:translateY(-2px);background:var(--rust)}
+.gate-error{color:var(--rust-bright);font-size:.88rem;font-weight:700;margin-top:1rem}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-6px)}40%,60%{transform:translateX(6px)}}
+.shake{animation:shake .45s}
+
+/* quick links + contacts */
+.qlinks{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.1rem;margin-bottom:2.8rem}
+.qlink{
+  position:relative;display:flex;align-items:center;gap:1rem;text-decoration:none;
+  border:1.5px solid var(--rule);border-radius:18px;padding:1.1rem 1.2rem;background:var(--card);
+  box-shadow:0 2px 0 rgba(20,38,27,.04);transition:transform .25s var(--ease),border-color .25s ease,box-shadow .25s ease;
+}
+.qlink:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:var(--shadow)}
+.qlink .ic{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;background:var(--forest);color:var(--cream);transition:transform .25s var(--ease),box-shadow .25s ease}
+.qlink:hover .ic{transform:scale(1.08) rotate(-4deg);box-shadow:0 0 0 3px rgba(224,138,46,.25),0 0 20px 4px rgba(224,138,46,.55)}
+.qlink .ic svg{width:20px;height:20px}
+.qlink .lbl strong{display:block;font-family:var(--display);font-weight:500;font-size:1.02rem;line-height:1.2}
+.qlink .lbl span{display:block;font-size:.83rem;color:var(--muted);margin-top:.1rem}
+
+.contacts{list-style:none;margin:0;padding:0;display:grid;gap:.9rem}
+.contacts li{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  padding:.9rem 1.1rem;border:1.5px solid var(--rule);border-radius:14px;background:var(--card);
+}
+.contacts .nm{font-family:var(--display);font-weight:500;font-size:1.05rem}
+.contacts .rl{color:var(--muted);font-size:.88rem}
+.contacts a{font-size:.9rem;font-weight:700;color:var(--accent);text-decoration:none;border-bottom:1.5px solid currentColor}
+
+/* footer */
+.foot{background:var(--forest-deep);background-image:linear-gradient(180deg,#0F3119 0%,#0C2916 100%);color:var(--cream);padding:3rem 0 2rem}
+.stripe{display:flex;height:5px;width:100%;margin-bottom:2.2rem;border-radius:999px;overflow:hidden}
+.stripe i{flex:1;background:var(--forest)}
+.stripe i.r{flex:0 0 3.4rem;background:var(--rust-bright)}
+.foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;align-items:center}
+.foot small{opacity:.58;font-size:.82rem}
+.totop{display:inline-flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:700;border:1.4px solid rgba(243,231,200,.3);border-radius:999px;padding:.4rem .9rem;text-decoration:none;color:var(--cream);transition:all .2s var(--ease)}
+.totop:hover{background:var(--gold);border-color:var(--gold);color:#2A1A06}
+</style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="">
+      <span><small>University of Leicester</small>Bangla Society</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    <ul class="nav-links" id="menu">
+      <li><a href="index.html#socials">Socials</a></li>
+      <li><a href="index.html#committee">Committee</a></li>
+      <li><a href="index.html#events">Events</a></li>
+      <li><a href="index.html#photos">Photos</a></li>
+      <li><a href="index.html#charity">Charity</a></li>
+      <li><a href="admin.html" class="active">Admin</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===================== PAGE HEADER ===================== -->
+<header class="pagehead">
+  <div class="wrap matra">
+    <span class="kicker">Admin</span>
+    <h1>Committee <em>admin</em></h1>
+    <p>A private space for committee business — notes, planning and shared resources. Committee members only.</p>
+  </div>
+</header>
+
+<main>
+  <!-- ===================== PASSWORD GATE ===================== -->
+  <div class="gate" id="gate">
+    <div class="gate-card">
+      <span class="lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg></span>
+      <h2>Members only</h2>
+      <p>Enter the admin password to continue.</p>
+      <form id="gateForm" autocomplete="off">
+        <input type="password" id="gateInput" placeholder="Password" required inputmode="numeric">
+        <button type="submit" class="btn">Unlock</button>
+      </form>
+      <p class="gate-error" id="gateError" hidden>Incorrect password — try again.</p>
+    </div>
+  </div>
+
+  <!-- ===================== COMMITTEE CONTENT ===================== -->
+  <div id="committeeContent" hidden>
+    <section class="section">
+      <div class="wrap">
+        <h2>Quick links</h2>
+        <div class="qlinks">
+          <a class="qlink" href="#" data-placeholder>
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 13h6M9 17h6"/></svg></span>
+            <span class="lbl"><strong>Meeting notes</strong><span>Shared doc of minutes</span></span>
+          </a>
+          <a class="qlink" href="#" data-placeholder>
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 9l10 6 10-6-10-6Z"/><path d="M2 15l10 6 10-6M2 9v6M22 9v6"/></svg></span>
+            <span class="lbl"><strong>Shared drive</strong><span>Files, designs and templates</span></span>
+          </a>
+          <a class="qlink" href="#" data-placeholder>
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M8 15h4"/></svg></span>
+            <span class="lbl"><strong>Budget tracker</strong><span>Spending and event costs</span></span>
+          </a>
+          <a class="qlink" href="#" data-placeholder>
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 11.8a8.4 8.4 0 0 1-12.3 7.45L3.6 20.4l1.2-4.4A8.4 8.4 0 1 1 20.4 11.8Z"/></svg></span>
+            <span class="lbl"><strong>Committee chat</strong><span>WhatsApp group for exec</span></span>
+          </a>
+        </div>
+
+        <h2>Contacts</h2>
+        <ul class="contacts">
+          <li><span><span class="nm">Raidah</span> <span class="rl">— President</span></span><a href="mailto:#" data-placeholder>Email</a></li>
+          <li><span><span class="nm">Shanjeda</span> <span class="rl">— Vice President</span></span><a href="mailto:#" data-placeholder>Email</a></li>
+          <li><span><span class="nm">Shabab</span> <span class="rl">— Secretary</span></span><a href="mailto:#" data-placeholder>Email</a></li>
+          <li><span><span class="nm">Ibrahim</span> <span class="rl">— Treasurer</span></span><a href="mailto:#" data-placeholder>Email</a></li>
+          <li><span><span class="nm">Anah</span> <span class="rl">— Events Manager</span></span><a href="mailto:#" data-placeholder>Email</a></li>
+          <li><span><span class="nm">Hamim</span> <span class="rl">— Events Manager (VIP Volunteer)</span></span><a href="mailto:#" data-placeholder>Email</a></li>
+          <li><span><span class="nm">Rashdan</span> <span class="rl">— Media / Videography (VIP Volunteer)</span></span><a href="mailto:#" data-placeholder>Email</a></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="stripe"><i></i><i class="r"></i><i></i></div>
+    <div class="foot-bottom">
+      <small>&copy; 2026 University of Leicester Bangla Society. Admin area — committee members only. Replace the placeholder links above.</small>
+      <a class="totop" href="index.html">Back to site <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ---- mobile menu ----
+(function () {
+  var btn = document.querySelector('.nav-toggle'), menu = document.getElementById('menu');
+  btn.addEventListener('click', function () {
+    var open = menu.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open));
+  });
+  menu.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+  });
+})();
+
+// ---- password gate ----
+// NOTE: this is a client-side gate for casual privacy only, not real security —
+// anyone who views this page's source can read the password and the gated content.
+(function () {
+  var PASSWORD = '1234';
+  var gate = document.getElementById('gate');
+  var content = document.getElementById('committeeContent');
+  var form = document.getElementById('gateForm');
+  var input = document.getElementById('gateInput');
+  var error = document.getElementById('gateError');
+  var card = document.querySelector('.gate-card');
+
+  function unlock() {
+    gate.hidden = true;
+    content.hidden = false;
+    try { sessionStorage.setItem('bsocCommitteeUnlocked', '1'); } catch (e) {}
+  }
+
+  try {
+    if (sessionStorage.getItem('bsocCommitteeUnlocked') === '1') unlock();
+  } catch (e) {}
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (input.value === PASSWORD) {
+      unlock();
+    } else {
+      error.hidden = false;
+      card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+      input.value = ''; input.focus();
+    }
+  });
+})();
+</script>
+</body>
+</html>

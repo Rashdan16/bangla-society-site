@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>University of Leicester Bangla Society</title>
+<meta name="description" content="The Bangla Society at the University of Leicester — food, festivals, film nights and socials. Everyone welcome.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..700&family=Karla:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =============================================================
+   TOKENS
+   ============================================================= */
+:root{
+  --forest:#154024;
+  --forest-deep:#0C2916;
+  --forest-glow:#1E5A34;
+  --rust:#AA3E21;
+  --rust-bright:#C74A27;
+  --cream:#F3E7C8;
+  --gold:#E08A2E;
+  --gold-soft:#F0B15E;
+  --ink:#14261B;
+
+  --bg:#FAF4E6;
+  --fg:var(--ink);
+  --muted:rgba(20,38,27,.68);
+  --rule:rgba(20,38,27,.16);
+  --rule-strong:rgba(20,38,27,.3);
+  --panel:#F3EAD6;
+  --card:#FFFDF7;
+  --accent:var(--forest);
+  --meta:var(--rust-bright);
+  --grad:linear-gradient(170deg,#FCF7EC 0%,#F6EDD9 34%,#EFE4C6 68%,#F8F1E1 100%);
+  --veil:rgba(20,64,36,.05);
+  --shadow:0 18px 40px rgba(20,38,27,.12);
+  --shadow-lg:0 30px 70px rgba(20,38,27,.18);
+
+  --display:"Fraunces","Iowan Old Style",Georgia,"Times New Roman",serif;
+  --text:"Karla","Segoe UI",system-ui,-apple-system,sans-serif;
+  --ease:cubic-bezier(.2,.8,.3,1);
+  --ease-draw:cubic-bezier(.6,.02,.25,1);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E2D19; --fg:#F1E8D3; --muted:rgba(241,232,211,.68);
+    --rule:rgba(241,232,211,.16); --rule-strong:rgba(241,232,211,.34);
+    --panel:#123720; --card:#143C24; --accent:#8FC79E; --meta:#E8A85A;
+    --grad:linear-gradient(170deg,#11361E 0%,#0C2716 38%,#0A2113 66%,#10331D 100%);
+    --veil:rgba(243,231,200,.045);
+    --shadow:0 18px 40px rgba(0,0,0,.35); --shadow-lg:0 30px 70px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E2D19; --fg:#F1E8D3; --muted:rgba(241,232,211,.68);
+  --rule:rgba(241,232,211,.16); --rule-strong:rgba(241,232,211,.34);
+  --panel:#123720; --card:#143C24; --accent:#8FC79E; --meta:#E8A85A;
+  --grad:linear-gradient(170deg,#11361E 0%,#0C2716 38%,#0A2113 66%,#10331D 100%);
+  --veil:rgba(243,231,200,.045);
+  --shadow:0 18px 40px rgba(0,0,0,.35); --shadow-lg:0 30px 70px rgba(0,0,0,.5);
+}
+
+/* =============================================================
+   BASE
+   ============================================================= */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:5.5rem}
+body{
+  margin:0;color:var(--fg);
+  background:var(--bg);background-image:var(--grad);background-attachment:fixed;
+  font-family:var(--text);font-size:clamp(18px,1.2vw + 15px,21px);line-height:1.68;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+a{color:inherit}
+::selection{background:var(--gold);color:#2A1A06}
+:focus-visible{outline:2.5px solid var(--gold);outline-offset:3px;border-radius:4px}
+.wrap{width:min(1120px,92vw);margin-inline:auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* scroll reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:calc(var(--i,0) * 70ms)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* =============================================================
+   NAV
+   ============================================================= */
+.nav{
+  position:sticky;top:0;z-index:60;color:var(--cream);
+  background:rgba(12,41,22,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(243,231,200,.1);
+}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;width:100%;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,var(--gold),var(--gold-soft))}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.6rem 0}
+.brand{display:flex;align-items:center;gap:.65rem;text-decoration:none;min-width:0}
+.brand img{width:46px;height:46px;flex:none;transition:transform .5s var(--ease),filter .3s ease}
+.brand:hover img{transform:rotate(-8deg) scale(1.06);filter:drop-shadow(0 0 10px rgba(224,138,46,.75))}
+.brand span{font-family:var(--display);font-weight:500;font-size:1.18rem;line-height:1.1}
+.brand span small{display:block;font-family:var(--text);font-weight:700;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;opacity:.7;margin-bottom:.12rem}
+.nav-links{display:flex;gap:.2rem;list-style:none;margin:0;padding:0;font-size:1.02rem;font-weight:600}
+.nav-links a{
+  position:relative;display:block;text-decoration:none;padding:.55rem .9rem;border-radius:999px;
+  transition:background-color .2s ease,color .2s ease;white-space:nowrap;
+}
+.nav-links a::after{
+  content:"";position:absolute;left:.75rem;right:.75rem;bottom:.25rem;height:1.5px;
+  background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease);
+}
+.nav-links a:hover{background:rgba(243,231,200,.08)}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-links a.active{color:var(--gold-soft)}
+.nav-toggle{display:none;background:none;border:1.4px solid rgba(243,231,200,.35);color:inherit;font:inherit;font-weight:600;border-radius:999px;padding:.35rem .85rem;cursor:pointer}
+@media (max-width:960px){
+  .nav-toggle{display:block}
+  .nav-links{
+    display:none;position:absolute;left:0;right:0;top:100%;
+    background:rgba(12,41,22,.97);flex-direction:column;gap:0;
+    padding:.5rem 4vw 1rem;border-top:1px solid rgba(243,231,200,.14);
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{padding:.75rem .4rem;border-radius:0;border-bottom:1px solid rgba(243,231,200,.1)}
+  .nav-links a::after{display:none}
+}
+@media (max-width:420px){.brand span{font-size:.9rem}.brand img{width:32px;height:32px}}
+
+/* =============================================================
+   HERO
+   ============================================================= */
+.hero{
+  position:relative;isolation:isolate;overflow:hidden;color:var(--cream);
+  background:var(--forest);
+  background-image:
+    radial-gradient(110% 80% at 80% 0%,#1E5A34 0%,#154024 42%,#0C2916 100%);
+  padding:clamp(3rem,7vw,5.5rem) 0 clamp(3.5rem,8vw,6rem);
+}
+.hero::before{ /* faint tiger-stripe texture */
+  content:"";position:absolute;inset:0;z-index:-1;opacity:.05;pointer-events:none;
+  background:repeating-linear-gradient(115deg,transparent 0 26px,#F3E7C8 26px 30px,transparent 30px 58px,#F3E7C8 58px 60px);
+}
+.hero::after{ /* soft gold bloom behind crest */
+  content:"";position:absolute;z-index:-1;width:60vw;height:60vw;max-width:720px;max-height:720px;
+  right:-12vw;top:50%;transform:translateY(-50%);border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(224,138,46,.22) 0%,rgba(224,138,46,0) 62%);
+}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(1.5rem,4vw,3.5rem);align-items:center}
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;text-align:center}
+  .hero-art{order:-1;margin-inline:auto;max-width:min(400px,78vw)}
+  .hero-actions{justify-content:center}
+  .rule-mark{margin-inline:auto}
+  .hero p.lede{margin-inline:auto}
+  .nextup{margin-inline:auto}
+  .hero::after{right:50%;top:22%;transform:translate(50%,-30%)}
+}
+.nextup{
+  display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;
+  border:1.4px solid rgba(243,231,200,.28);border-radius:999px;padding:.5rem 1.1rem .5rem .8rem;
+  font-size:.95rem;font-weight:600;color:var(--cream);background:rgba(12,41,22,.35);
+  transition:border-color .2s ease,background-color .2s ease,transform .2s var(--ease);
+  margin-bottom:1.5rem;
+}
+.nextup:hover{border-color:var(--gold);background:rgba(224,138,46,.12);transform:translateY(-2px)}
+.nextup .pulse{position:relative;width:9px;height:9px;border-radius:50%;background:var(--gold)}
+.nextup .pulse::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1.5px solid var(--gold);opacity:0}
+.nextup b{font-weight:700;color:var(--gold-soft)}
+.nextup .arrow{margin-left:.15rem;transition:transform .2s var(--ease)}
+.nextup:hover .arrow{transform:translateX(3px)}
+.rule-mark{width:5.5rem;height:2px;background:var(--gold);margin:0 0 1.3rem;transform-origin:left center}
+.hero h1{
+  margin:0;font-family:var(--display);font-optical-sizing:auto;font-weight:400;
+  font-size:clamp(3rem,6.8vw,5.3rem);line-height:1.02;letter-spacing:-.015em;
+}
+.hero h1 em{font-style:italic;font-weight:500;color:var(--gold-soft)}
+.hero p.lede{margin:1.35rem 0 0;max-width:46ch;color:rgba(243,231,200,.85);font-size:1.18rem}
+.hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2.1rem}
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;
+  padding:.92rem 1.7rem;border-radius:999px;font-weight:700;font-size:1.05rem;
+  border:1.6px solid transparent;transition:transform .2s var(--ease),background-color .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.btn svg{width:17px;height:17px;transition:transform .2s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+.btn-solid{background:var(--rust-bright);color:#fff;box-shadow:0 10px 24px rgba(199,74,39,.35)}
+.btn-solid:hover{transform:translateY(-2px);background:var(--rust);box-shadow:0 14px 30px rgba(199,74,39,.45)}
+.btn-gold{background:var(--gold);color:#2A1A06;box-shadow:0 10px 24px rgba(224,138,46,.3)}
+.btn-gold:hover{transform:translateY(-2px);background:var(--gold-soft)}
+.btn-ghost{border-color:rgba(243,231,200,.42);color:var(--cream)}
+.btn-ghost:hover{background:rgba(243,231,200,.12);border-color:rgba(243,231,200,.7);transform:translateY(-2px)}
+
+.hero-art{width:100%;max-width:510px;justify-self:end;filter:drop-shadow(0 30px 40px rgba(0,0,0,.35))}
+.alpona{display:block;width:100%;height:auto;overflow:visible}
+.ink{fill:none;stroke:var(--cream);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.ink-thin{stroke-width:1.3;stroke:rgba(243,231,200,.72)}
+.seed{fill:var(--gold);stroke:none}
+.orbit{transform-origin:200px 200px}
+
+/* marquee band */
+.band{background:var(--rust);color:#FFF3E4;overflow:hidden;border-top:1px solid rgba(255,243,228,.15);border-bottom:1px solid rgba(0,0,0,.15)}
+.track{display:flex;width:max-content;gap:0;padding:.8rem 0;font-family:var(--display);font-style:italic;font-size:1.2rem;letter-spacing:.01em}
+.track span{display:inline-flex;align-items:center;gap:1.4rem;padding-right:1.4rem;white-space:nowrap}
+.track i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold-soft);flex:none}
+
+/* =============================================================
+   SECTIONS
+   ============================================================= */
+.section{position:relative;padding:clamp(3.4rem,7.5vw,6rem) 0}
+.section-head{max-width:60ch;position:relative}
+.matra{border-top:1.8px solid var(--rule-strong);padding-top:1rem;transform-origin:left center}
+h2{font-family:var(--display);font-weight:400;font-size:clamp(2.05rem,4.6vw,3rem);line-height:1.1;margin:0 0 .6rem;letter-spacing:-.01em}
+h2 em{font-style:italic;color:var(--accent)}
+.kicker{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--text);font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.7rem}
+.kicker::before{content:"";width:22px;height:2px;background:currentColor;border-radius:2px}
+.section-head p{margin:0;max-width:54ch;color:var(--muted);font-size:1.1rem}
+
+/* decorative watermark alpona */
+.wm{position:absolute;pointer-events:none;opacity:.07;z-index:0;width:min(520px,60vw)}
+.wm svg{display:block;width:100%;height:auto}
+.wm .ink,.wm .ink-thin{stroke:currentColor}
+.section > .wrap{position:relative;z-index:1}
+
+/* =============================================================
+   SOCIALS
+   ============================================================= */
+.social-btns{margin-top:2.6rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.1rem}
+.sbtn{
+  position:relative;display:flex;align-items:center;gap:1rem;text-decoration:none;overflow:hidden;
+  border:1.5px solid var(--rule);border-radius:18px;padding:1.15rem 1.25rem;background:var(--card);
+  box-shadow:0 2px 0 rgba(20,38,27,.04);
+  transition:transform .25s var(--ease),border-color .25s ease,box-shadow .25s ease;
+}
+.sbtn::before{ /* sheen */
+  content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);
+  transform:translateX(-120%);transition:transform .6s var(--ease);pointer-events:none;
+}
+.sbtn:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:var(--shadow)}
+.sbtn:hover::before{transform:translateX(120%)}
+.sbtn .ic{width:50px;height:50px;flex:none;border-radius:14px;display:grid;place-items:center;background:var(--forest);color:var(--cream);transition:transform .25s var(--ease),box-shadow .25s ease}
+.sbtn:hover .ic{transform:scale(1.08) rotate(-4deg);box-shadow:0 0 0 3px rgba(224,138,46,.25),0 0 22px 4px rgba(224,138,46,.55)}
+.sbtn .ic svg{width:25px;height:25px;display:block}
+.ic-ig{background:linear-gradient(45deg,#FBAD50 8%,#E1306C 46%,#8134AF 74%,#5B51D8 100%);color:#fff}
+.ic-wa{background:#25D366;color:#fff}
+.ic-tt{background:#0C0C0C;color:#fff}
+.sbtn .lbl strong{display:block;font-family:var(--display);font-weight:500;font-size:1.1rem;line-height:1.2}
+.sbtn .lbl span{display:block;font-size:.87rem;color:var(--muted);line-height:1.4;margin-top:.1rem}
+.sbtn .go{margin-left:auto;flex:none;width:30px;height:30px;border-radius:50%;border:1.4px solid var(--rule);display:grid;place-items:center;color:var(--muted);transition:all .25s var(--ease)}
+.sbtn .go svg{width:14px;height:14px}
+.sbtn:hover .go{background:var(--gold);border-color:var(--gold);color:#2A1A06;transform:translateX(2px);box-shadow:0 0 14px 2px rgba(224,138,46,.6)}
+.sbtn.primary{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+.sbtn.primary .lbl span{color:rgba(243,231,200,.72)}
+.sbtn.primary .ic{background:var(--gold);color:#2A1A06}
+.sbtn.primary .go{border-color:rgba(243,231,200,.3);color:var(--cream)}
+.sbtn.primary:hover{border-color:var(--gold)}
+
+/* =============================================================
+   COMMITTEE
+   ============================================================= */
+.committee{background:var(--veil);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.people{margin-top:2.6rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1.8rem 1.3rem;perspective:1200px}
+.person{text-align:center}
+.card-btn{
+  display:block;width:100%;padding:0;background:var(--card);cursor:zoom-in;position:relative;
+  border:1.5px solid var(--rule);border-radius:16px;overflow:hidden;
+  box-shadow:0 2px 0 rgba(20,38,27,.04);
+  transition:transform .35s var(--ease),border-color .3s ease,box-shadow .3s ease;
+  transform-style:preserve-3d;
+}
+.card-btn img{display:block;width:100%;height:auto;aspect-ratio:665/1000;object-fit:cover}
+.card-btn::after{ /* hover hint */
+  content:"Tap to enlarge";position:absolute;left:50%;bottom:.75rem;transform:translate(-50%,8px);
+  background:rgba(12,41,22,.85);color:var(--cream);font:700 .72rem/1 var(--text);letter-spacing:.06em;text-transform:uppercase;
+  padding:.45rem .7rem;border-radius:999px;opacity:0;transition:opacity .25s ease,transform .25s var(--ease);pointer-events:none;
+}
+.card-btn:hover,.card-btn:focus-visible{transform:translateY(-8px) rotateX(3deg);border-color:var(--gold);box-shadow:var(--shadow-lg),0 0 0 3px rgba(224,138,46,.25),0 0 36px 6px rgba(224,138,46,.45)}
+.card-btn:hover::after,.card-btn:focus-visible::after{opacity:1;transform:translate(-50%,0)}
+.person .nm{font-family:var(--display);font-weight:500;font-size:1.15rem;margin-top:.9rem;line-height:1.2}
+.person .rl{font-size:.88rem;color:var(--muted);margin-top:.15rem}
+.person .rl em{font-style:normal;display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#2A1A06;background:var(--gold);padding:.15rem .5rem;border-radius:999px;margin-left:.35rem;vertical-align:middle}
+@media (max-width:640px){ /* horizontal snap carousel on phones */
+  .people{
+    display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:.5rem .3rem 1.2rem;
+    margin-inline:calc(-4vw);padding-inline:4vw;scrollbar-width:none;
+  }
+  .people::-webkit-scrollbar{display:none}
+  .person{flex:0 0 min(72vw,280px);scroll-snap-align:center}
+  .card-btn::after{opacity:1;transform:translate(-50%,0)}
+}
+.swipe-hint{display:none;text-align:center;font-size:.82rem;color:var(--muted);margin-top:-.4rem}
+@media (max-width:640px){.swipe-hint{display:block}}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:90;background:rgba(5,20,11,.9);backdrop-filter:blur(6px);display:none;place-items:center;padding:3vh 4vw}
+.lb.open{display:grid}
+.lb img{max-width:min(620px,90vw);max-height:94vh;width:auto;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lb-close{position:absolute;top:1rem;right:1rem;width:46px;height:46px;border-radius:50%;background:rgba(243,231,200,.14);border:1.5px solid rgba(243,231,200,.4);color:#F3E7C8;font-size:1.5rem;line-height:1;cursor:pointer;transition:background-color .2s ease,transform .2s var(--ease)}
+.lb-close:hover{background:rgba(243,231,200,.28);transform:rotate(90deg)}
+
+/* =============================================================
+   EVENTS
+   ============================================================= */
+.ev-list{margin-top:2.6rem;display:grid;gap:1.1rem;max-width:860px}
+.ev-card{
+  position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:1.25rem;align-items:start;overflow:hidden;
+  border:1.5px solid var(--rule);border-radius:18px;padding:1.25rem 1.4rem;background:var(--card);
+  box-shadow:0 2px 0 rgba(20,38,27,.04);
+  transition:transform .25s var(--ease),border-color .25s ease,box-shadow .25s ease;
+}
+.ev-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--gold),var(--rust-bright));opacity:0;transition:opacity .25s ease}
+.ev-card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:var(--shadow)}
+.ev-card:hover::before{opacity:1}
+.chip{width:68px;flex:none;border-radius:14px;overflow:hidden;text-align:center;background:var(--rust-bright);color:#FFF3E4;line-height:1.1;box-shadow:0 8px 18px rgba(199,74,39,.3)}
+.chip .m{display:block;font-size:.7rem;font-weight:700;letter-spacing:.12em;padding:.32rem 0;background:rgba(0,0,0,.22)}
+.chip .d{display:block;font-family:var(--display);font-size:1.65rem;font-weight:600;padding:.32rem 0 .45rem}
+.chip .d.tbc{font-size:.8rem;font-family:var(--text);font-weight:700;letter-spacing:.06em;padding:.7rem 0 .75rem}
+.ev-top{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .8rem}
+.ev-card h3{margin:0;font-family:var(--display);font-weight:500;font-size:1.28rem;line-height:1.25}
+.count{display:inline-flex;align-items:center;gap:.35rem;font-size:.74rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.25rem .6rem;border-radius:999px;background:rgba(224,138,46,.16);color:var(--meta)}
+.count.soon{background:var(--gold);color:#2A1A06}
+.ev-meta{display:flex;flex-wrap:wrap;gap:.15rem 1.1rem;margin:.35rem 0 .45rem;color:var(--meta);font-size:.9rem;font-weight:600}
+.ev-meta span{display:inline-flex;align-items:center;gap:.35rem}
+.ev-meta svg{width:14px;height:14px;opacity:.85}
+.ev-card p{margin:0 0 .8rem;font-size:.97rem;color:var(--muted)}
+.ev-actions{display:flex;flex-wrap:wrap;gap:.5rem}
+.mini{display:inline-flex;align-items:center;gap:.4rem;text-decoration:none;font-size:.82rem;font-weight:700;padding:.42rem .85rem;border-radius:999px;border:1.4px solid var(--rule-strong);color:var(--fg);transition:all .2s var(--ease)}
+.mini svg{width:14px;height:14px}
+.mini:hover{background:var(--forest);border-color:var(--forest);color:var(--cream);transform:translateY(-1px)}
+@media (max-width:520px){.ev-card{grid-template-columns:1fr;gap:.9rem}.chip{width:68px}}
+
+/* =============================================================
+   PHOTOS
+   ============================================================= */
+.gallery{margin-top:2.6rem;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:150px;gap:.9rem}
+.shot{
+  position:relative;border-radius:16px;overflow:hidden;border:1.5px solid var(--rule);
+  display:grid;place-items:end start;color:var(--cream);cursor:pointer;
+  background:var(--forest);isolation:isolate;
+  transition:transform .3s var(--ease),box-shadow .3s ease,border-color .3s ease;
+}
+.shot::before{ /* alpona-ish pattern */
+  content:"";position:absolute;inset:0;z-index:-1;opacity:.16;
+  background:
+    radial-gradient(circle at 25% 30%,#F3E7C8 0 2px,transparent 3px),
+    radial-gradient(circle at 75% 70%,#F3E7C8 0 2px,transparent 3px),
+    repeating-linear-gradient(135deg,transparent 0 14px,rgba(243,231,200,.6) 14px 15px);
+  background-size:60px 60px,60px 60px,auto;
+}
+.shot::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.45) 100%)}
+.shot:nth-child(3n+2){background:var(--rust)}
+.shot:nth-child(4n+3){background:var(--gold);color:#2A1A06}
+.shot:nth-child(4n+3)::before{opacity:.22}
+.shot:nth-child(4n+3)::after{background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.18) 100%)}
+.shot:hover{transform:scale(1.02);box-shadow:var(--shadow);border-color:var(--gold-soft)}
+.shot span{padding:.8rem 1rem;font-family:var(--display);font-size:1rem;font-weight:500;transition:transform .3s var(--ease)}
+.shot:hover span{transform:translateY(-3px)}
+.shot.wide{grid-column:span 2}
+.shot.tall{grid-row:span 2}
+@media (max-width:760px){.gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:130px}.shot.tall{grid-row:span 1}}
+.note{margin-top:1.2rem;font-size:.9rem;color:var(--muted)}
+
+/* =============================================================
+   CHARITY
+   ============================================================= */
+.charity{color:#FFF3E4;background:var(--rust);background-image:linear-gradient(160deg,#C74A27 0%,#AA3E21 55%,#8E3419 100%);overflow:hidden}
+.charity .matra{border-color:rgba(255,243,228,.4)}
+.charity .kicker{color:#FFD9A8}
+.charity h2 em{color:#FFD9A8}
+.charity .section-head p{color:rgba(255,243,228,.9)}
+.charity .wm{color:#FFF3E4;opacity:.09;right:-8%;bottom:-20%}
+.charity-inner{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(1.5rem,4vw,3rem);align-items:center}
+@media (max-width:820px){.charity-inner{grid-template-columns:1fr}}
+.raise{border:1.6px solid rgba(255,243,228,.32);border-radius:20px;padding:1.6rem 1.7rem;background:rgba(0,0,0,.14);backdrop-filter:blur(4px)}
+.raise h3{margin:0 0 .8rem;font-family:var(--display);font-weight:500;font-size:1.15rem}
+.raise ul{margin:0;padding-left:1.1rem;display:grid;gap:.5rem;font-size:.96rem}
+.goal{margin:1.5rem 0 0}
+.goal .nums{display:flex;justify-content:space-between;align-items:baseline;font-size:.86rem;font-weight:600;margin-bottom:.45rem}
+.goal .nums b{font-family:var(--display);font-size:1.4rem;font-weight:500;color:#FFD9A8}
+.goal .bar{height:10px;border-radius:999px;background:rgba(0,0,0,.22);overflow:hidden}
+.goal .fill{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--gold),#FFD9A8);transition:width 1.4s var(--ease) .2s}
+.goal .fill.go{width:var(--pct)}
+
+/* =============================================================
+   FOOTER
+   ============================================================= */
+.foot{background:var(--forest-deep);background-image:linear-gradient(180deg,#0F3119 0%,#0C2916 100%);color:var(--cream);padding:3.4rem 0 2.2rem;position:relative}
+.stripe{display:flex;height:5px;width:100%;margin-bottom:2.6rem;border-radius:999px;overflow:hidden}
+.stripe i{flex:1;background:var(--forest)}
+.stripe i.r{flex:0 0 3.4rem;background:var(--rust-bright)}
+.foot-inner{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:2rem}
+@media (max-width:760px){.foot-inner{grid-template-columns:1fr}}
+.foot-id{display:flex;align-items:center;gap:1rem}
+.foot-id img{width:64px;height:64px}
+.foot-id strong{display:block;font-family:var(--display);font-weight:500;font-size:1.15rem}
+.foot-id span{font-size:.9rem;opacity:.72}
+.foot h4{margin:0 0 .7rem;font-family:var(--text);font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.6}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:.45rem;font-size:.95rem}
+.foot a{color:var(--cream);text-decoration:none;border-bottom:1.5px solid rgba(243,231,200,.28);transition:border-color .18s ease,color .18s ease}
+.foot a:hover{border-color:var(--gold);color:var(--gold-soft)}
+.foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;align-items:center;margin-top:2.4rem;padding-top:1.4rem;border-top:1px solid rgba(243,231,200,.14)}
+.foot small{opacity:.58;font-size:.82rem}
+.totop{display:inline-flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:700;border:1.4px solid rgba(243,231,200,.3);border-radius:999px;padding:.4rem .9rem;text-decoration:none;color:var(--cream);transition:all .2s var(--ease)}
+.totop:hover{background:var(--gold);border-color:var(--gold);color:#2A1A06;border-bottom-color:var(--gold)}
+.totop svg{width:14px;height:14px}
+
+/* =============================================================
+   MOTION
+   ============================================================= */
+@media (prefers-reduced-motion: no-preference){
+  .ink{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.4s var(--ease-draw) forwards}
+  .seed{opacity:0;animation:pop .5s ease forwards}
+  .crest{transform-origin:200px 200px;scale:.25;opacity:0;animation:rise .9s var(--ease) .1s forwards}
+  .orbit{animation:spin 90s linear infinite}
+  .hero h1,.hero p.lede,.hero-actions,.rule-mark,.nextup{opacity:0;animation:lift .8s var(--ease) forwards}
+  .nextup{animation-delay:.05s}
+  .rule-mark{animation-delay:.2s}
+  .hero h1{animation-delay:.32s}
+  .hero p.lede{animation-delay:.48s}
+  .hero-actions{animation-delay:.64s}
+  .nextup .pulse::after{animation:ping 2s ease-out infinite}
+  .track{animation:marquee 34s linear infinite}
+  .band:hover .track{animation-play-state:paused}
+  .matra{transform:scaleX(0);transition:transform .8s var(--ease-draw)}
+  .matra.drawn{transform:scaleX(1)}
+  .lb.open img{animation:zoomIn .24s var(--ease)}
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{to{opacity:1}}
+@keyframes rise{to{scale:1;opacity:1}}
+@keyframes spin{to{rotate:360deg}}
+@keyframes lift{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes ping{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.2);opacity:0}}
+@keyframes marquee{to{transform:translateX(-50%)}}
+@keyframes zoomIn{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top">
+      <img src="assets/logo.png" alt="">
+      <span><small>University of Leicester</small>Bangla Society</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    <ul class="nav-links" id="menu">
+      <li><a href="#socials">Socials</a></li>
+      <li><a href="#committee">Committee</a></li>
+      <li><a href="#events">Events</a></li>
+      <li><a href="#photos">Photos</a></li>
+      <li><a href="#charity">Charity</a></li>
+      <li><a href="admin.html">Admin</a></li>
+    </ul>
+  </div>
+  <div class="progress" id="progress"></div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <a class="nextup" href="#events">
+        <span class="pulse"></span>
+        Next up <b>Freshers' welcome</b> &middot; 24 Sept
+        <svg class="arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <div class="rule-mark"></div>
+      <h1>Welcome to <em>Bangla Society</em></h1>
+      <p class="lede">The home for Bengali students at the University of Leicester &mdash; and for anyone curious about the culture. Food, festivals, film nights, socials and a lot of talking. Come as you are.</p>
+      <div class="hero-actions">
+        <a class="btn btn-solid" href="#socials">Join the society <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn-ghost" href="#events">See what's on</a>
+        <a class="btn btn-gold" href="#photos">See photos</a>
+      </div>
+    </div>
+
+    <div class="hero-art">
+      <svg class="alpona" viewBox="0 0 400 400" role="img" aria-label="The University of Leicester Bangla Society crest, framed by a hand-drawn folk pattern">
+        <defs>
+          <path id="petal" pathLength="1" d="M200 104 C 176 84, 174 56, 200 30 C 226 56, 224 84, 200 104 Z"/>
+          <path id="leaf" pathLength="1" d="M200 106 C 188 92, 187 72, 200 56 C 213 72, 212 92, 200 106 Z"/>
+          <path id="curl" pathLength="1" d="M200 22 C 212 10, 232 12, 238 26 C 242 37, 233 46, 224 43"/>
+          <clipPath id="crestClip"><circle cx="200" cy="200" r="96"/></clipPath>
+        </defs>
+
+        <image class="crest" href="assets/logo.png" x="104" y="104" width="192" height="192" clip-path="url(#crestClip)"/>
+
+        <g class="orbit">
+          <g>
+            <use class="ink" href="#petal" style="animation-delay:.4s"/>
+            <use class="ink" href="#petal" transform="rotate(45 200 200)" style="animation-delay:.48s"/>
+            <use class="ink" href="#petal" transform="rotate(90 200 200)" style="animation-delay:.56s"/>
+            <use class="ink" href="#petal" transform="rotate(135 200 200)" style="animation-delay:.64s"/>
+            <use class="ink" href="#petal" transform="rotate(180 200 200)" style="animation-delay:.72s"/>
+            <use class="ink" href="#petal" transform="rotate(225 200 200)" style="animation-delay:.8s"/>
+            <use class="ink" href="#petal" transform="rotate(270 200 200)" style="animation-delay:.88s"/>
+            <use class="ink" href="#petal" transform="rotate(315 200 200)" style="animation-delay:.96s"/>
+          </g>
+          <g>
+            <use class="ink ink-thin" href="#leaf" transform="rotate(22.5 200 200)" style="animation-delay:1.02s"/>
+            <use class="ink ink-thin" href="#leaf" transform="rotate(67.5 200 200)" style="animation-delay:1.07s"/>
+            <use class="ink ink-thin" href="#leaf" transform="rotate(112.5 200 200)" style="animation-delay:1.12s"/>
+            <use class="ink ink-thin" href="#leaf" transform="rotate(157.5 200 200)" style="animation-delay:1.17s"/>
+            <use class="ink ink-thin" href="#leaf" transform="rotate(202.5 200 200)" style="animation-delay:1.22s"/>
+            <use class="ink ink-thin" href="#leaf" transform="rotate(247.5 200 200)" style="animation-delay:1.27s"/>
+            <use class="ink ink-thin" href="#leaf" transform="rotate(292.5 200 200)" style="animation-delay:1.32s"/>
+            <use class="ink ink-thin" href="#leaf" transform="rotate(337.5 200 200)" style="animation-delay:1.37s"/>
+          </g>
+          <g>
+            <use class="ink ink-thin" href="#curl" style="animation-delay:1.42s"/>
+            <use class="ink ink-thin" href="#curl" transform="rotate(90 200 200)" style="animation-delay:1.48s"/>
+            <use class="ink ink-thin" href="#curl" transform="rotate(180 200 200)" style="animation-delay:1.54s"/>
+            <use class="ink ink-thin" href="#curl" transform="rotate(270 200 200)" style="animation-delay:1.6s"/>
+          </g>
+          <circle class="ink ink-thin" cx="200" cy="200" r="182" pathLength="1" style="animation-delay:1.5s"/>
+          <g>
+            <circle class="seed" cx="200" cy="8" r="4.5" style="animation-delay:2s"/>
+            <circle class="seed" cx="336" cy="64" r="4.5" style="animation-delay:2.05s"/>
+            <circle class="seed" cx="392" cy="200" r="4.5" style="animation-delay:2.1s"/>
+            <circle class="seed" cx="336" cy="336" r="4.5" style="animation-delay:2.15s"/>
+            <circle class="seed" cx="200" cy="392" r="4.5" style="animation-delay:2.2s"/>
+            <circle class="seed" cx="64" cy="336" r="4.5" style="animation-delay:2.25s"/>
+            <circle class="seed" cx="8" cy="200" r="4.5" style="animation-delay:2.3s"/>
+            <circle class="seed" cx="64" cy="64" r="4.5" style="animation-delay:2.35s"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== MARQUEE ===================== -->
+<div class="band" aria-hidden="true">
+  <div class="track">
+    <span>Food<i></i>Festivals<i></i>Film nights<i></i>Socials<i></i>Tea<i></i>Friends for life<i></i>Everyone welcome<i></i></span>
+    <span>Food<i></i>Festivals<i></i>Film nights<i></i>Socials<i></i>Tea<i></i>Friends for life<i></i>Everyone welcome<i></i></span>
+  </div>
+</div>
+
+<main>
+
+<!-- ===================== SOCIALS ===================== -->
+<section class="section" id="socials">
+  <div class="wm" style="right:-6%;top:-10%;color:var(--forest)">
+    <svg viewBox="0 0 400 400" aria-hidden="true"><use href="#petal" class="ink"/><use href="#petal" class="ink" transform="rotate(45 200 200)"/><use href="#petal" class="ink" transform="rotate(90 200 200)"/><use href="#petal" class="ink" transform="rotate(135 200 200)"/><use href="#petal" class="ink" transform="rotate(180 200 200)"/><use href="#petal" class="ink" transform="rotate(225 200 200)"/><use href="#petal" class="ink" transform="rotate(270 200 200)"/><use href="#petal" class="ink" transform="rotate(315 200 200)"/><circle class="ink" cx="200" cy="200" r="182"/><circle class="ink" cx="200" cy="200" r="96"/></svg>
+  </div>
+  <div class="wrap">
+    <div class="section-head matra">
+      <span class="kicker">Socials</span>
+      <h2>Find us and <em>follow along</em></h2>
+      <p>Event announcements go out on Instagram first, the group chat is where the day-to-day happens, and membership is bought through the Students&rsquo; Union.</p>
+    </div>
+
+    <div class="social-btns">
+      <a class="sbtn reveal" style="--i:0" href="https://www.instagram.com/uolbanglasoc?stkn=MWRuNzhvcHBhNzZq" target="_blank" rel="noopener">
+        <span class="ic ic-ig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.1"/><circle cx="17.3" cy="6.7" r="1.05" fill="currentColor" stroke="none"/></svg></span>
+        <span class="lbl"><strong>Instagram</strong><span>Event posts, stories and photos</span></span>
+        <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+      </a>
+      <a class="sbtn reveal" style="--i:1" href="#" data-placeholder>
+        <span class="ic ic-wa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.4 11.8a8.4 8.4 0 0 1-12.3 7.45L3.6 20.4l1.2-4.4A8.4 8.4 0 1 1 20.4 11.8Z"/><path d="M9.1 8.3c.25-.05.5.02.66.25l.85 1.32c.15.23.13.53-.05.74l-.5.6c-.14.17-.17.4-.07.6.5 1 1.3 1.8 2.3 2.3.2.1.43.07.6-.07l.6-.5c.21-.18.51-.2.74-.05l1.32.85c.23.16.3.41.25.66-.2.95-1.05 1.6-2.02 1.5-3.1-.33-5.55-2.78-5.88-5.88-.1-.97.55-1.82 1.5-2.02Z" fill="currentColor" stroke="none"/></svg></span>
+        <span class="lbl"><strong>WhatsApp</strong><span>The members group chat</span></span>
+        <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+      </a>
+      <a class="sbtn reveal" style="--i:2" href="https://www.tiktok.com/@uolbengalisociety?_r=1&_t=ZG-99lLwhxhURd" target="_blank" rel="noopener">
+        <span class="ic ic-tt"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><g id="tt"><path d="M14.6 3.2v9.9a3.9 3.9 0 1 1-3.2-3.84"/><path d="M14.6 3.2a5.1 5.1 0 0 0 5.1 5.05"/></g></defs><use href="#tt" stroke="#69C9D0" transform="translate(-1.3,-1)"/><use href="#tt" stroke="#EE1D52" transform="translate(1.3,1)"/><use href="#tt" stroke="currentColor"/></svg></span>
+        <span class="lbl"><strong>TikTok</strong><span>Clips from our nights out</span></span>
+        <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+      </a>
+      <a class="sbtn primary reveal" style="--i:3" href="#" data-placeholder>
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1.1a2.5 2.5 0 0 0 0 5v1.1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1.1a2.5 2.5 0 0 0 0-5Z"/><path d="M13.3 6.4v11.2"/></svg></span>
+        <span class="lbl"><strong>BSOC membership</strong><span>Join through the Students&rsquo; Union</span></span>
+        <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMMITTEE ===================== -->
+<section class="section committee" id="committee">
+  <div class="wrap">
+    <div class="section-head matra">
+      <span class="kicker">Committee</span>
+      <h2>Meet the <em>2026</em> committee</h2>
+    </div>
+
+    <div class="people">
+      <div class="person reveal" style="--i:0">
+        <button class="card-btn" type="button" aria-label="Enlarge Raidah's committee card">
+          <img src="assets/committee-raidah.jpg" alt="Raidah, President" loading="lazy">
+        </button>
+        <div class="nm">Raidah</div>
+        <div class="rl">President</div>
+      </div>
+      <div class="person reveal" style="--i:1">
+        <button class="card-btn" type="button" aria-label="Enlarge Shanjeda's committee card">
+          <img src="assets/committee-shanjeda.jpg" alt="Shanjeda, Vice President" loading="lazy">
+        </button>
+        <div class="nm">Shanjeda</div>
+        <div class="rl">Vice President</div>
+      </div>
+      <div class="person reveal" style="--i:2">
+        <button class="card-btn" type="button" aria-label="Enlarge Shabab's committee card">
+          <img src="assets/committee-shabab.jpg" alt="Shabab, Secretary" loading="lazy">
+        </button>
+        <div class="nm">Shabab</div>
+        <div class="rl">Secretary</div>
+      </div>
+      <div class="person reveal" style="--i:3">
+        <button class="card-btn" type="button" aria-label="Enlarge Ibrahim's committee card">
+          <img src="assets/committee-ibrahim.jpg" alt="Ibrahim, Treasurer" loading="lazy">
+        </button>
+        <div class="nm">Ibrahim</div>
+        <div class="rl">Treasurer</div>
+      </div>
+      <div class="person reveal" style="--i:4">
+        <button class="card-btn" type="button" aria-label="Enlarge Anah's committee card">
+          <img src="assets/committee-anah.jpg" alt="Anah, Events Manager" loading="lazy">
+        </button>
+        <div class="nm">Anah</div>
+        <div class="rl">Events Manager</div>
+      </div>
+      <div class="person reveal" style="--i:5">
+        <button class="card-btn" type="button" aria-label="Enlarge Hamim's committee card">
+          <img src="assets/committee-hamim.jpg" alt="Hamim, Events Manager (VIP Volunteer)" loading="lazy">
+        </button>
+        <div class="nm">Hamim</div>
+        <div class="rl">Events Manager<em>VIP Volunteer</em></div>
+      </div>
+      <div class="person reveal" style="--i:6">
+        <button class="card-btn" type="button" aria-label="Enlarge Rashdan's committee card">
+          <img src="assets/committee-rashdan.jpg" alt="Rashdan, Media / Videography (VIP Volunteer)" loading="lazy">
+        </button>
+        <div class="nm">Rashdan</div>
+        <div class="rl">Media / Videography<em>VIP Volunteer</em></div>
+      </div>
+    </div>
+    <p class="swipe-hint">Swipe to see everyone &rarr;</p>
+  </div>
+</section>
+
+<!-- ===================== EVENTS ===================== -->
+<section class="section" id="events">
+  <div class="wm" style="left:-10%;bottom:-18%;color:var(--forest)">
+    <svg viewBox="0 0 400 400" aria-hidden="true"><use href="#petal" class="ink"/><use href="#petal" class="ink" transform="rotate(45 200 200)"/><use href="#petal" class="ink" transform="rotate(90 200 200)"/><use href="#petal" class="ink" transform="rotate(135 200 200)"/><use href="#petal" class="ink" transform="rotate(180 200 200)"/><use href="#petal" class="ink" transform="rotate(225 200 200)"/><use href="#petal" class="ink" transform="rotate(270 200 200)"/><use href="#petal" class="ink" transform="rotate(315 200 200)"/><circle class="ink" cx="200" cy="200" r="182"/></svg>
+  </div>
+  <div class="wrap">
+    <div class="section-head matra">
+      <span class="kicker">Events</span>
+      <h2>Upcoming <em>events</em></h2>
+    </div>
+
+    <div class="ev-list">
+      <article class="ev-card reveal" style="--i:0" data-date="2026-09-24">
+        <div class="chip"><span class="m">SEP</span><span class="d">24</span></div>
+        <div>
+          <div class="ev-top"><h3>Freshers' welcome</h3><span class="count" data-count></span></div>
+          <div class="ev-meta">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>6:00pm</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.3-6-11a6 6 0 0 1 12 0c0 5.7-6 11-6 11Z"/><circle cx="12" cy="10" r="2.2"/></svg>Percy Gee Building, Students&rsquo; Union</span>
+          </div>
+          <p>Our opening social of the year, with tea, snacks and introductions to the committee.</p>
+          <div class="ev-actions">
+            <a class="mini" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Bangla+Society+%E2%80%93+Freshers%27+welcome&dates=20260924T180000/20260924T200000&location=Percy+Gee+Building,+Students%27+Union,+Leicester&details=Our+opening+social+of+the+year."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>Add to calendar</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="ev-card reveal" style="--i:1" data-date="2026-12-16">
+        <div class="chip"><span class="m">DEC</span><span class="d">16</span></div>
+        <div>
+          <div class="ev-top"><h3>Victory Day</h3><span class="count" data-count></span></div>
+          <div class="ev-meta">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>6:30pm</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.3-6-11a6 6 0 0 1 12 0c0 5.7-6 11-6 11Z"/><circle cx="12" cy="10" r="2.2"/></svg>Percy Gee Building, Students&rsquo; Union</span>
+          </div>
+          <p>Marking 16 December 1971 with a short evening of history, music and food.</p>
+          <div class="ev-actions">
+            <a class="mini" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Bangla+Society+%E2%80%93+Victory+Day&dates=20261216T183000/20261216T203000&location=Percy+Gee+Building,+Students%27+Union,+Leicester&details=Marking+16+December+1971+with+history,+music+and+food."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>Add to calendar</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PHOTOS ===================== -->
+<section class="section" id="photos">
+  <div class="wrap">
+    <div class="section-head matra">
+      <span class="kicker">Photos</span>
+      <h2>Last year, <em>in pictures</em></h2>
+      <p>A selection from our events. Tagged photos from members go up on Instagram after every night.</p>
+    </div>
+
+    <div class="gallery">
+      <div class="shot wide tall reveal" style="--i:0"><span>New Year celebration</span></div>
+      <div class="shot reveal" style="--i:1"><span>Community iftar</span></div>
+      <div class="shot reveal" style="--i:2"><span>Mother Language Day</span></div>
+      <div class="shot reveal" style="--i:3"><span>Food night</span></div>
+      <div class="shot reveal" style="--i:4"><span>Charity bake sale</span></div>
+      <div class="shot wide reveal" style="--i:5"><span>Freshers' welcome</span></div>
+      <div class="shot reveal" style="--i:6"><span>Film screening</span></div>
+      <div class="shot reveal" style="--i:7"><span>Farewell meal</span></div>
+    </div>
+    <p class="note">These tiles are placeholders. Drop your images in and they'll fill the same frames &mdash; landscape shots at roughly 4:3 work best.</p>
+  </div>
+</section>
+
+<!-- ===================== CHARITY ===================== -->
+<section class="section charity" id="charity">
+  <div class="wm">
+    <svg viewBox="0 0 400 400" aria-hidden="true"><use href="#petal" class="ink"/><use href="#petal" class="ink" transform="rotate(45 200 200)"/><use href="#petal" class="ink" transform="rotate(90 200 200)"/><use href="#petal" class="ink" transform="rotate(135 200 200)"/><use href="#petal" class="ink" transform="rotate(180 200 200)"/><use href="#petal" class="ink" transform="rotate(225 200 200)"/><use href="#petal" class="ink" transform="rotate(270 200 200)"/><use href="#petal" class="ink" transform="rotate(315 200 200)"/><circle class="ink" cx="200" cy="200" r="182"/><circle class="ink" cx="200" cy="200" r="96"/></svg>
+  </div>
+  <div class="wrap charity-inner">
+    <div class="section-head matra" style="max-width:none">
+      <span class="kicker">Charity</span>
+      <h2>What we raise, and <em>where it goes</em></h2>
+      <p>Every year we pick one cause and publish the total. Ticket money from the New Year celebration goes straight into it, alongside bake sales and a sponsored event in spring.</p>
+      <div class="hero-actions">
+        <a class="btn btn-gold" href="#" data-placeholder>Donate to this year's cause <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+
+    <div class="raise reveal">
+      <h3>How the money is raised</h3>
+      <ul>
+        <li>A share of every New Year celebration ticket</li>
+        <li>Bake sales in the SU during term</li>
+        <li>A sponsored walk or fast in the spring term</li>
+        <li>Direct donations through our fundraising page</li>
+      </ul>
+      <div class="goal">
+        <div class="nums"><span>Raised so far</span><b>&pound;420 <small style="font:600 .8rem var(--text);opacity:.8">of &pound;1,000</small></b></div>
+        <div class="bar"><div class="fill" style="--pct:42%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="stripe"><i></i><i class="r"></i><i></i></div>
+    <div class="foot-inner">
+      <div class="foot-id">
+        <img src="assets/logo.png" alt="University of Leicester Bangla Society crest">
+        <div><strong>Bangla Society</strong><span>University of Leicester</span></div>
+      </div>
+      <div>
+        <h4>Find us</h4>
+        <ul>
+          <li><a href="https://www.instagram.com/uolbanglasoc?stkn=MWRuNzhvcHBhNzZq" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="#" data-placeholder>WhatsApp group</a></li>
+          <li><a href="https://www.tiktok.com/@uolbengalisociety?_r=1&_t=ZG-99lLwhxhURd" target="_blank" rel="noopener">TikTok</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Society</h4>
+        <ul>
+          <li><a href="#" data-placeholder>Students&rsquo; Union page</a></li>
+          <li><a href="#committee">Committee</a></li>
+          <li><a href="admin.html">Admin</a></li>
+          <li><a href="mailto:hello@example.ac.uk">Email us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <small>&copy; 2026 University of Leicester Bangla Society. Replace the placeholder links before sharing this around.</small>
+      <a class="totop" href="#top">Back to top <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="Committee card">
+  <button class="lb-close" type="button" aria-label="Close">&times;</button>
+  <img src="" alt="">
+</div>
+
+<script>
+// ---- nav: mobile menu, scroll progress, active link ----
+(function () {
+  var btn = document.querySelector('.nav-toggle'), menu = document.getElementById('menu');
+  btn.addEventListener('click', function () {
+    var open = menu.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open));
+  });
+  menu.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+  });
+
+  var bar = document.getElementById('progress');
+  function prog() {
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    bar.style.transform = 'scaleX(' + (max > 0 ? h.scrollTop / max : 0) + ')';
+  }
+  window.addEventListener('scroll', prog, { passive: true }); prog();
+
+  var links = Array.prototype.slice.call(menu.querySelectorAll('a'));
+  var secs = links.map(function (a) { return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          links.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id); });
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    secs.forEach(function (s) { io.observe(s); });
+  }
+})();
+
+// ---- reveal on scroll + matra rules + charity bar ----
+(function () {
+  var items = document.querySelectorAll('.reveal, .matra, .goal .fill');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function show(el) {
+    if (el.classList.contains('reveal')) el.classList.add('in');
+    if (el.classList.contains('matra')) el.classList.add('drawn');
+    if (el.classList.contains('fill')) el.classList.add('go');
+  }
+  if (!('IntersectionObserver' in window) || reduce) { items.forEach(show); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  items.forEach(function (el) { io.observe(el); });
+})();
+
+// ---- event countdown chips ----
+(function () {
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+  document.querySelectorAll('.ev-card[data-date]').forEach(function (card) {
+    var d = new Date(card.getAttribute('data-date') + 'T00:00:00');
+    var days = Math.round((d - today) / 86400000);
+    var el = card.querySelector('[data-count]'); if (!el) return;
+    if (days === 0) { el.textContent = 'Today'; el.classList.add('soon'); }
+    else if (days === 1) { el.textContent = 'Tomorrow'; el.classList.add('soon'); }
+    else if (days > 1) { el.textContent = 'In ' + days + ' days'; if (days <= 7) el.classList.add('soon'); }
+    else { el.textContent = 'Past'; el.style.opacity = '.55'; }
+  });
+})();
+
+// ---- committee lightbox ----
+(function () {
+  var lb = document.getElementById('lightbox'), lbImg = lb.querySelector('img'), last = null;
+  function open(src, alt, t) { lbImg.src = src; lbImg.alt = alt; lb.classList.add('open'); document.body.style.overflow = 'hidden'; last = t; lb.querySelector('.lb-close').focus(); }
+  function close() { lb.classList.remove('open'); lbImg.src = ''; document.body.style.overflow = ''; if (last) { last.focus(); last = null; } }
+  document.querySelectorAll('.card-btn').forEach(function (b) {
+    b.addEventListener('click', function () { var im = b.querySelector('img'); open(im.src, im.alt, b); });
+  });
+  lb.addEventListener('click', function (e) { if (e.target !== lbImg) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lb.classList.contains('open')) close(); });
+})();
+</script>
+</body>
+</html>
