@@ -32,14 +32,14 @@ directly no longer works. To try the editor without logging in, also run
 ## Editing content
 
 Committee members sign in at `/dashboard.html` and click **Open the editor**.
-Every save becomes a pull request; an approver merges it and Netlify rebuilds.
+Pressing Publish commits to `main` and Netlify rebuilds the site in about a
+minute. No GitHub accounts needed for members.
 Details: `SETUP.md` (one-off setup) and `admin/ROLES.md` (day-to-day roles).
 
 ## Things still to fill in
 
 - `admin/config.yml`: `site_url` / `display_url`
-- `.github/CODEOWNERS`: the President's and Treasurer's GitHub usernames
-- `dashboard.html`: `GITHUB_REPO`, the four quick links, contact emails
+- `dashboard.html`: the four quick links, contact emails
 - Through the editor: WhatsApp link, SU membership link, donate link, photos
 
 ## Notes

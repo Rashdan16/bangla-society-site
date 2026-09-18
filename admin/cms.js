@@ -80,7 +80,7 @@
       return h('div', { className: 'pv pv-in' },
         h('p', { className: 'pv-kicker' }, 'Events · live preview'),
         h('p', { className: 'pv-note' },
-          published ? h('span', null, h('b', null, 'Published'), ' — this card will show on the homepage once the change is approved.')
+          published ? h('span', null, h('b', null, 'Published'), ' — this card will show on the homepage as soon as you press Publish.')
                     : h('span', null, h('b', null, 'Draft'), ' — saved, but hidden from the homepage until you tick “Published”.')),
         h('article', { className: 'ev-card' + (published ? '' : ' draft') },
           h('div', { className: 'chip' },

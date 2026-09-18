@@ -1,5 +1,15 @@
 # Changelog
 
+## [2026-09-18] - Publish directly, no approval step
+- Switched Decap to `publish_mode: simple`: pressing Publish commits to `main`
+  and Netlify rebuilds; no pull requests, no GitHub accounts for members.
+- Removed `.github/CODEOWNERS` and the branch-protection steps from the runbook.
+- Rewrote `admin/ROLES.md` around a single site maintainer who can roll back.
+- Dashboard: "Review changes" card replaced by "Add an event", publish flow and
+  roles table reworded; `GITHUB_REPO` setting removed.
+- Files affected: admin/config.yml, admin/cms.js, admin/ROLES.md, SETUP.md,
+  README.md, dashboard.html, .github/CODEOWNERS (deleted)
+
 ## [2026-09-18] - Committee editor (Decap CMS) and dashboard
 - Moved events, photos, social links, charity total and the announcement banner
   out of `index.html` into `content/`; the homepage now fetches and renders them

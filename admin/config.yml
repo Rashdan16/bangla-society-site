@@ -6,21 +6,19 @@
 #  ┌─ ACCESS CONTROL: WHAT IS REAL AND WHAT IS CONVENTION ─────────────────────┐
 #  │ REAL (enforced by software):                                               │
 #  │  • Only people with a Netlify Identity account (invite-only) can log in.  │
-#  │  • Every change becomes a pull request (publish_mode below). Nothing is   │
-#  │    live until that PR is merged into `main`.                               │
-#  │  • Who can MERGE is decided by GitHub — branch protection on `main` plus   │
-#  │    .github/CODEOWNERS — not by anything in this file. See admin/ROLES.md.  │
-#  │ CONVENTION (not enforced — anyone logged in can open the screen):          │
+#  │  • Every save is a git commit on `main`, so anything can be undone by the │
+#  │    site maintainer (git revert / Netlify "rollback").                      │
+#  │ CONVENTION (not enforced — anyone logged in can open every screen):        │
+#  │  • Pressing "Publish" puts the change live straight away, no approval.    │
 #  │  • "Site settings → Charity" and "→ Links" are for the Treasurer /         │
-#  │    President. Decap (open source) has no per-collection permissions, so   │
-#  │    the approval gate above is what actually stops an unwanted edit.        │
+#  │    President. Decap (open source) has no per-collection permissions.      │
+#  │  See admin/ROLES.md.                                                        │
 #  └────────────────────────────────────────────────────────────────────────────┘
 # =============================================================================
 
 backend:
   name: git-gateway            # Netlify Identity users → commits via Netlify's Git Gateway
   branch: main
-  squash_merges: true          # one tidy commit per approved change
   commit_messages:
     create:      "content: add {{collection}} “{{slug}}”"
     update:      "content: update {{collection}} “{{slug}}”"
@@ -39,10 +37,11 @@ backend:
   # and removing the Netlify Identity widget <script> from admin/index.html.
   # Nothing else on the site changes. See SETUP.md → "If Git Gateway goes away".
 
-# Every save creates a draft PR. Drafts move Draft → In review → Ready in the
-# "Workflow" tab; "Publish" merges the PR (only succeeds once GitHub's branch
-# protection is satisfied — that's the real approval gate).
-publish_mode: editorial_workflow
+# Publishing mode: "simple" (the default) — pressing Publish commits straight to
+# `main` and Netlify rebuilds the site within a minute. No review step.
+# To add an approval step later, set `publish_mode: editorial_workflow` here;
+# saves then become GitHub pull requests that an approver merges.
+publish_mode: simple
 
 # Local editing without logging in: run `npx decap-server` in the site folder,
 # then open http://localhost:8001/admin/. Only takes effect on localhost.
@@ -139,7 +138,6 @@ collections:
   # ───────────────────────────────────────────────────────────────────────────
   #  SITE SETTINGS — single files.
   #  Links + Charity are Treasurer / President territory BY CONVENTION (see top).
-  #  .github/CODEOWNERS makes GitHub require their review before merge.
   # ───────────────────────────────────────────────────────────────────────────
   - name: settings
     label: Site settings

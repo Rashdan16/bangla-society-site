@@ -390,13 +390,13 @@ h2 em{font-style:italic;color:var(--accent)}
           <a class="act primary reveal" style="--i:0" href="admin/">
             <span class="badge">Start here</span>
             <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4l10-10-4-4L4 16v4Z"/><path d="M12.5 7.5l4 4"/></svg></span>
-            <span><strong>Open the editor</strong><span class="t">Add an event, upload photos, update the charity total or switch the announcement on. Saves go for approval, then live.</span></span>
+            <span><strong>Open the editor</strong><span class="t">Add an event, upload photos, update the charity total or switch the announcement on. Press Publish and it's live in about a minute.</span></span>
             <span class="go">Go to the editor <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
           </a>
-          <a class="act reveal" style="--i:1" href="#" id="prLink" target="_blank" rel="noopener">
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="8" r="2.5"/><path d="M6 8.5v7M18 10.5c0 3-3 4-6 4H8.5"/></svg></span>
-            <span><strong>Review changes</strong><span class="t" id="prText">Approvers: see what's waiting for sign-off on GitHub and approve or merge it.</span></span>
-            <span class="go">Open pull requests <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+          <a class="act reveal" style="--i:1" href="admin/#/collections/events/new">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg></span>
+            <span><strong>Add an event</strong><span class="t">Straight to a blank event form: title, date, time, venue and a line about it. The homepage picks it up on Publish.</span></span>
+            <span class="go">New event <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
           </a>
           <a class="act reveal" style="--i:2" href="index.html" target="_blank" rel="noopener">
             <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
@@ -411,15 +411,15 @@ h2 em{font-style:italic;color:var(--accent)}
     <section class="section">
       <div class="wrap">
         <h2>How a change <em>goes live</em></h2>
-        <p class="sub">Nothing you save is public straight away. Every edit is checked by an approver first, so there's no way to break the site by accident.</p>
+        <p class="sub">There's no approval queue. What you publish is live within a minute, and every version is kept, so anything can be put back.</p>
         <div class="flow" id="flow">
           <svg class="line" viewBox="0 0 100 4" preserveAspectRatio="none" aria-hidden="true">
             <path d="M16 2 H84"/>
             <path class="ink" d="M16 2 H84" pathLength="1"/>
           </svg>
-          <div class="step reveal" style="--i:0"><span class="n">1</span><strong>You edit</strong><p>In the editor, make the change and press <b>Save</b>. It sits in <b>Drafts</b> until you move it to <b>In review</b>.</p></div>
-          <div class="step reveal" style="--i:2"><span class="n">2</span><strong>An approver checks it</strong><p>The President or Secretary gets the change as a pull request on GitHub and <b>approves</b> it. Money and link changes also need the Treasurer.</p></div>
-          <div class="step reveal" style="--i:4"><span class="n">3</span><strong>It goes live</strong><p>Press <b>Publish</b> (or merge on GitHub). Netlify rebuilds the site and the change is up within a minute.</p></div>
+          <div class="step reveal" style="--i:0"><span class="n">1</span><strong>You edit</strong><p>In the editor, fill in the form. The preview on the right shows exactly what visitors will see.</p></div>
+          <div class="step reveal" style="--i:2"><span class="n">2</span><strong>You publish</strong><p>Press <b>Publish</b>. The change is saved to the site's history with your name on it.</p></div>
+          <div class="step reveal" style="--i:4"><span class="n">3</span><strong>It's live</strong><p>Netlify rebuilds the site automatically. Refresh the homepage after about a minute. Made a mistake? Edit again, or ask <b>Rashdan</b> to roll back.</p></div>
         </div>
       </div>
     </section>
@@ -470,15 +470,15 @@ h2 em{font-style:italic;color:var(--accent)}
         <h2>Who can do <em>what</em></h2>
         <div class="roles-wrap reveal">
           <table class="roles">
-            <thead><tr><th>Role</th><th>Events &amp; photos</th><th>Announcement</th><th>Charity &amp; links</th><th>Approve &amp; publish</th></tr></thead>
+            <thead><tr><th>Role</th><th>Events &amp; photos</th><th>Announcement</th><th>Charity &amp; links</th><th>Undo &amp; invites</th></tr></thead>
             <tbody>
-              <tr><td>Committee member</td><td class="y">Edit &rarr; review</td><td class="y">Edit &rarr; review</td><td class="n">Please don't</td><td class="n">&mdash;</td></tr>
-              <tr><td>President &amp; Secretary</td><td class="y">Edit &rarr; review</td><td class="y">Edit &rarr; review</td><td class="y">President</td><td class="y">Yes, on GitHub</td></tr>
-              <tr><td>Treasurer</td><td class="y">Edit &rarr; review</td><td class="y">Edit &rarr; review</td><td class="y">Yes</td><td class="n">Reviews money &amp; links</td></tr>
+              <tr><td>Committee member</td><td class="y">Publish</td><td class="y">Publish</td><td class="n">Please don't</td><td class="n">&mdash;</td></tr>
+              <tr><td>President &amp; Treasurer</td><td class="y">Publish</td><td class="y">Publish</td><td class="y">Publish</td><td class="n">&mdash;</td></tr>
+              <tr><td>Site maintainer (Rashdan)</td><td class="y">Publish</td><td class="y">Publish</td><td class="y">Publish</td><td class="y">Roll back, invite, remove</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="note">"Please don't" is an agreement, not a lock &mdash; the editor can't hide screens per person. What <em>is</em> locked: only approvers can publish, and charity/link changes need the Treasurer's or President's tick. Full detail in <a href="admin/ROLES.md">admin/ROLES.md</a>.</p>
+        <p class="note">"Please don't" is an agreement, not a lock &mdash; the editor can't hide screens per person. Nobody needs a GitHub account: you sign in with the email you were invited on. Full detail in <a href="admin/ROLES.md">admin/ROLES.md</a>.</p>
       </div>
     </section>
 
@@ -498,9 +498,8 @@ h2 em{font-style:italic;color:var(--accent)}
 
 <script>
 // =============================================================================
-//  SETTINGS — the two things to fill in after deploying (see SETUP.md)
+//  SETTINGS
 // =============================================================================
-var GITHUB_REPO = '';       // e.g. 'uol-bangla-society/bangla-society-site' → "Review changes" links to its PRs
 var IDENTITY_URL = '';      // only for local previews: 'https://<your-site>.netlify.app/.netlify/identity'
 
 // ---- mobile menu ----
@@ -617,11 +616,6 @@ function loadOverview() {
   }
   function isoDate(s) { var d = new Date(String(s || '').slice(0, 10) + 'T00:00:00'); return isNaN(d) ? null : d; }
   function money(n) { return '£' + Math.round(+n || 0).toLocaleString('en-GB'); }
-
-  // "Review changes" → the repo's PR list once GITHUB_REPO is set.
-  var pr = document.getElementById('prLink');
-  if (GITHUB_REPO) { pr.href = 'https://github.com/' + GITHUB_REPO + '/pulls'; }
-  else { pr.href = 'admin/#/workflow'; pr.removeAttribute('target'); document.getElementById('prText').textContent = 'See drafts and changes waiting for review in the editor’s Workflow tab. (Set GITHUB_REPO in dashboard.html to link straight to GitHub.)'; }
 
   Promise.all([
     getJSON('content/events.json', []),
