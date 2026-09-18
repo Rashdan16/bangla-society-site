@@ -1,0 +1,16 @@
+# CODEOWNERS — who must review a change before it can be merged.
+#
+# Works together with GitHub branch protection on `main`:
+#   Settings → Branches → main → "Require a pull request before merging"
+#     → "Require approvals: 1" and "Require review from Code Owners".
+#
+# Replace the handles below with the real GitHub usernames of the President
+# and the Treasurer. Each must be a collaborator with Write access.
+#
+# Money and outward-facing links: President + Treasurer.
+/content/settings/charity.json   @PRESIDENT-GITHUB-USERNAME @TREASURER-GITHUB-USERNAME
+/content/settings/links.json     @PRESIDENT-GITHUB-USERNAME @TREASURER-GITHUB-USERNAME
+
+# The editor's configuration and the deployment config: whoever maintains the site.
+/admin/config.yml                @PRESIDENT-GITHUB-USERNAME
+/netlify.toml                    @PRESIDENT-GITHUB-USERNAME
