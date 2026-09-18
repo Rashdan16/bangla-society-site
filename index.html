@@ -202,6 +202,23 @@ a{color:inherit}
 .track span{display:inline-flex;align-items:center;gap:1.4rem;padding-right:1.4rem;white-space:nowrap}
 .track i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold-soft);flex:none}
 
+/* announcement strip (under the nav; content from content/settings/banner.json) */
+.announce{background:var(--rust);color:#FFF3E4;border-bottom:1px solid rgba(0,0,0,.15);overflow:hidden}
+.announce-inner{display:flex;align-items:center;gap:1rem;padding:.6rem 0;font-family:var(--display);font-style:italic;font-size:1.08rem;letter-spacing:.01em}
+.announce-msg{display:inline-flex;align-items:center;gap:.8rem;flex:1;min-width:0;flex-wrap:wrap;row-gap:.2rem}
+.announce-msg i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold-soft);flex:none;box-shadow:0 0 0 0 rgba(240,177,94,.6)}
+.announce-msg a{color:#FFD9A8;font-family:var(--text);font-style:normal;font-weight:700;font-size:.9rem;text-decoration:none;border-bottom:1.5px solid rgba(255,217,168,.5);transition:border-color .18s ease,color .18s ease}
+.announce-msg a:hover{color:#fff;border-color:#fff}
+.announce-x{flex:none;width:32px;height:32px;border-radius:50%;border:1.4px solid rgba(255,243,228,.35);background:none;color:inherit;font-size:1.25rem;line-height:1;cursor:pointer;transition:background-color .2s ease,transform .2s var(--ease)}
+.announce-x:hover{background:rgba(255,243,228,.16);transform:rotate(90deg)}
+.announce.bye{pointer-events:none;transition:height .35s var(--ease),opacity .25s ease}
+@media (prefers-reduced-motion: no-preference){
+  .announce{animation:unroll .55s var(--ease) both}
+  .announce-msg i{animation:beacon 2.4s ease-out infinite}
+}
+@keyframes unroll{from{clip-path:inset(0 0 100% 0);transform:translateY(-8px)}to{clip-path:inset(0);transform:none}}
+@keyframes beacon{0%{box-shadow:0 0 0 0 rgba(240,177,94,.6)}100%{box-shadow:0 0 0 9px rgba(240,177,94,0)}}
+
 /* =============================================================
    SECTIONS
    ============================================================= */
@@ -460,6 +477,15 @@ h2 em{font-style:italic;color:var(--accent)}
   </div>
   <div class="progress" id="progress"></div>
 </nav>
+
+<!-- ===================== ANNOUNCEMENT ===================== -->
+<!-- Hidden unless banner.json has enabled: true. Filled by BSOC.renderBanner(). -->
+<div class="announce" id="announce" role="region" aria-label="Announcement" hidden>
+  <div class="wrap announce-inner">
+    <span class="announce-msg"><i aria-hidden="true"></i><span id="announceText"></span><a id="announceLink" hidden></a></span>
+    <button class="announce-x" type="button" aria-label="Dismiss announcement">&times;</button>
+  </div>
+</div>
 
 <!-- ===================== HERO ===================== -->
 <header class="hero" id="top">
@@ -854,6 +880,53 @@ var BSOC = {};
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lb.classList.contains('open')) close(); });
 })();
 
+// ---- announcement banner ----
+(function () {
+  var KEY = 'bsocBannerDismissed';   // localStorage key holding the hash of the dismissed message
+
+  // hash(str): a small, fast string hash (djb2). We store this rather than the
+  // message itself, so the banner re-appears whenever the committee changes the
+  // wording — a dismissal only "sticks" for the exact message it was dismissed on.
+  function hash(str) {
+    var h = 5381;
+    for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0;
+    return String(h >>> 0);
+  }
+
+  // BSOC.renderBanner(b): show the strip if b.enabled, with message and optional link.
+  BSOC.renderBanner = function (b) {
+    var box = document.getElementById('announce');
+    var msg = (b && b.message || '').trim();
+    if (!b || !b.enabled || !msg) { box.hidden = true; return; }
+
+    var sig = hash(msg + '|' + (b.link_url || ''));
+    var dismissed = null;
+    try { dismissed = localStorage.getItem(KEY); } catch (e) { /* private mode etc. */ }
+    if (dismissed === sig) return;              // this exact message was already dismissed
+
+    document.getElementById('announceText').textContent = msg;
+    var a = document.getElementById('announceLink');
+    var url = (b.link_url || '').trim(), label = (b.link_text || '').trim();
+    if (url && label) {
+      a.textContent = label; a.href = url; a.hidden = false;
+      if (!/^#/.test(url) && !/^\//.test(url)) { a.target = '_blank'; a.rel = 'noopener'; }
+    } else { a.hidden = true; }
+    box.hidden = false;
+
+    box.querySelector('.announce-x').addEventListener('click', function () {
+      try { localStorage.setItem(KEY, sig); } catch (e) {}
+      // Play the roll-up animation, then take the strip out of the layout.
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) { box.hidden = true; return; }
+      // Fix the current height, then transition it to 0 so the page slides up smoothly.
+      box.style.height = box.offsetHeight + 'px';
+      box.classList.add('bye');
+      requestAnimationFrame(function () { requestAnimationFrame(function () { box.style.height = '0'; box.style.opacity = '0'; }); });
+      box.addEventListener('transitionend', function () { box.hidden = true; }, { once: true });
+    }, { once: true });
+  };
+})();
+
 // =============================================================================
 //  CONTENT LOADER
 //  Everything the committee edits in the CMS lives in /content as JSON:
@@ -1019,7 +1092,7 @@ var BSOC = {};
   // the same layout classes as before. If the entry has an image we drop an <img>
   // inside; if not, the patterned placeholder background shows through.
   function photoTile(p, i) {
-    var size = String(p.size || '').replace(/[^a-z ]/g, '').replace(/bnormalb/g, '');
+    var size = String(p.size || '').replace(/[^a-z ]/g, '').replace(/\bnormal\b/g, '');
     var cls = 'shot ' + size + ' reveal' + (p.image ? ' has-img' : '');
     var img = p.image ? '<img src="' + esc(p.image) + '" alt="" loading="lazy">' : '';
     var el = html('<div class="' + cls.replace(/\s+/g, ' ') + '" style="--i:' + i + '"' + (p.image ? ' role="button" tabindex="0"' : '') + '>' + img + '<span>' + esc(p.caption) + '</span></div>');
