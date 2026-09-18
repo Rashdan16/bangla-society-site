@@ -1,0 +1,179 @@
+# =============================================================================
+#  Decap CMS — University of Leicester Bangla Society
+#  Loaded by /admin/index.html. Edit this file to change what the committee can
+#  edit; the public site reads the files these collections write (see /content).
+#
+#  ┌─ ACCESS CONTROL: WHAT IS REAL AND WHAT IS CONVENTION ─────────────────────┐
+#  │ REAL (enforced by software):                                               │
+#  │  • Only people with a Netlify Identity account (invite-only) can log in.  │
+#  │  • Every change becomes a pull request (publish_mode below). Nothing is   │
+#  │    live until that PR is merged into `main`.                               │
+#  │  • Who can MERGE is decided by GitHub — branch protection on `main` plus   │
+#  │    .github/CODEOWNERS — not by anything in this file. See admin/ROLES.md.  │
+#  │ CONVENTION (not enforced — anyone logged in can open the screen):          │
+#  │  • "Site settings → Charity" and "→ Links" are for the Treasurer /         │
+#  │    President. Decap (open source) has no per-collection permissions, so   │
+#  │    the approval gate above is what actually stops an unwanted edit.        │
+#  └────────────────────────────────────────────────────────────────────────────┘
+# =============================================================================
+
+backend:
+  name: git-gateway            # Netlify Identity users → commits via Netlify's Git Gateway
+  branch: main
+  squash_merges: true          # one tidy commit per approved change
+  commit_messages:
+    create:      "content: add {{collection}} “{{slug}}”"
+    update:      "content: update {{collection}} “{{slug}}”"
+    delete:      "content: delete {{collection}} “{{slug}}”"
+    uploadMedia: "media: upload {{path}}"
+    deleteMedia: "media: delete {{path}}"
+  # ── Migration note ──────────────────────────────────────────────────────────
+  # Netlify has deprecated Git Gateway (still works, no longer developed). If it
+  # is ever switched off, swap to DecapBridge — a drop-in that speaks the same
+  # protocol — by replacing the block above with:
+  #   name: git-gateway
+  #   repo: OWNER/REPO
+  #   branch: main
+  #   identity_url: https://auth.decapbridge.com/sites/<site-id>
+  #   gateway_url: https://gateway.decapbridge.com
+  # and removing the Netlify Identity widget <script> from admin/index.html.
+  # Nothing else on the site changes. See SETUP.md → "If Git Gateway goes away".
+
+# Every save creates a draft PR. Drafts move Draft → In review → Ready in the
+# "Workflow" tab; "Publish" merges the PR (only succeeds once GitHub's branch
+# protection is satisfied — that's the real approval gate).
+publish_mode: editorial_workflow
+
+# Local editing without logging in: run `npx decap-server` in the site folder,
+# then open http://localhost:8001/admin/. Only takes effect on localhost.
+local_backend: true
+
+# The public site, for the "View site" link in the editor header and the
+# "View preview" links in the Workflow tab. Change once to your real domain
+# (SETUP.md step 2) — e.g. https://bangla-society.netlify.app or a custom domain.
+site_url: "https://CHANGE-ME.netlify.app"
+display_url: "https://CHANGE-ME.netlify.app"
+
+media_folder: "assets"         # where uploads are committed
+public_folder: "/assets"       # how the site refers to them (absolute so /admin/ previews resolve)
+logo_url: "/assets/logo.png"
+locale: en
+
+slug:
+  encoding: unicode
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+
+  # ───────────────────────────────────────────────────────────────────────────
+  #  EVENTS — anyone on the committee. One Markdown file per event.
+  # ───────────────────────────────────────────────────────────────────────────
+  - name: events
+    label: Events
+    label_singular: Event
+    description: "What's on. Untick “Published” to keep an event as a draft on the site."
+    folder: content/events
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"      # e.g. 2026-09-24-freshers-welcome
+    summary: "{{date | date('D MMM YYYY')}} · {{title}}"
+    sortable_fields: [date, title]
+    view_filters:
+      - { label: "Published", field: published, pattern: true }
+      - { label: "Drafts (hidden)", field: published, pattern: false }
+    editor:
+      preview: true            # live card preview (admin/cms.js)
+    fields:
+      - { label: "Title", name: title, widget: string }
+      - label: "Date"
+        name: date
+        widget: datetime
+        format: "YYYY-MM-DD"    # what gets saved
+        date_format: "DD MMM YYYY"
+        time_format: false
+        picker_utc: false
+      - { label: "Time", name: time, widget: string, required: false, hint: "e.g. 6:00pm — used for the calendar link too" }
+      - { label: "Venue", name: venue, widget: string, required: false, hint: "e.g. Percy Gee Building, Students’ Union" }
+      - { label: "Description", name: description, widget: text, required: false, hint: "One or two sentences. Shown on the card." }
+      - { label: "Published", name: published, widget: boolean, default: true, hint: "Off = saved but not shown on the site" }
+
+  # ───────────────────────────────────────────────────────────────────────────
+  #  PHOTOS — anyone on the committee. One entry per gallery tile.
+  #  Uploads go to assets/photos/ (keeps them apart from the committee cards).
+  # ───────────────────────────────────────────────────────────────────────────
+  - name: photos
+    label: Photos
+    label_singular: Photo
+    description: "Gallery tiles on the homepage. Landscape pictures around 4:3 look best; keep files under ~1 MB."
+    folder: content/photos
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: caption
+    slug: "{{slug}}"
+    summary: "{{caption}}"
+    sortable_fields: [order, caption]
+    media_folder: "/assets/photos"
+    public_folder: "/assets/photos"
+    editor:
+      preview: true
+    fields:
+      - { label: "Caption", name: caption, widget: string }
+      - { label: "Image", name: image, widget: image, required: false, allow_multiple: false, hint: "Leave empty to keep a patterned placeholder tile" }
+      - label: "Tile size"
+        name: size
+        widget: select
+        default: normal
+        options:
+          - { label: "Normal", value: normal }
+          - { label: "Wide (2 columns)", value: wide }
+          - { label: "Tall (2 rows)", value: tall }
+          - { label: "Wide and tall", value: "wide tall" }
+      - { label: "Order", name: order, widget: number, value_type: int, default: 0, min: 0, hint: "Lower numbers come first" }
+
+  # ───────────────────────────────────────────────────────────────────────────
+  #  SITE SETTINGS — single files.
+  #  Links + Charity are Treasurer / President territory BY CONVENTION (see top).
+  #  .github/CODEOWNERS makes GitHub require their review before merge.
+  # ───────────────────────────────────────────────────────────────────────────
+  - name: settings
+    label: Site settings
+    description: "Links, the charity total and the announcement strip. Charity and Links: Treasurer or President only, please."
+    editor:
+      preview: true
+    files:
+
+      - name: banner
+        label: "Announcement banner"
+        file: content/settings/banner.json
+        description: "The strip under the menu on the homepage. Visitors can dismiss it; it comes back if you change the wording."
+        fields:
+          - { label: "Show the banner", name: enabled, widget: boolean, default: false }
+          - { label: "Message", name: message, widget: string, hint: "Keep it to one line" }
+          - { label: "Link text", name: link_text, widget: string, required: false, hint: "e.g. See the event" }
+          - { label: "Link URL", name: link_url, widget: string, required: false, hint: "e.g. #events, or a full https:// address" }
+
+      - name: links
+        label: "Social & membership links  (Treasurer / President)"
+        file: content/settings/links.json
+        description: "Leave a box empty to show that button as a placeholder."
+        fields:
+          - { label: "Instagram", name: instagram, widget: string, required: false, pattern: ['^(https?://.*)?$', "Must start with https://"] }
+          - { label: "WhatsApp group invite", name: whatsapp, widget: string, required: false, pattern: ['^(https?://.*)?$', "Must start with https://"] }
+          - { label: "TikTok", name: tiktok, widget: string, required: false, pattern: ['^(https?://.*)?$', "Must start with https://"] }
+          - { label: "SU membership page", name: su_membership, widget: string, required: false, pattern: ['^(https?://.*)?$', "Must start with https://"] }
+
+      - name: charity
+        label: "Charity  (Treasurer / President)"
+        file: content/settings/charity.json
+        description: "The running total shown in the Charity section."
+        fields:
+          - { label: "Cause", name: cause, widget: string, required: false, hint: "e.g. Bangladesh flood relief — used in “Donate to …”" }
+          - { label: "Donate URL", name: donate_url, widget: string, required: false, pattern: ['^(https?://.*)?$', "Must start with https://"] }
+          - { label: "Raised so far (£)", name: raised, widget: number, value_type: int, min: 0, default: 0 }
+          - { label: "Target (£)", name: target, widget: number, value_type: int, min: 1, default: 1000 }

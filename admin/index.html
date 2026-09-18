@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Editor — Bangla Society</title>
+<link rel="icon" href="/assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..700&family=Karla:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  /admin/  — the Decap CMS editor.
+
+  Decap is a React app loaded from a CDN; it reads /admin/config.yml for what to
+  edit and /admin/cms.js for the live previews. This page only adds two things
+  of our own:
+    1. a branded loading screen (the CMS bundle is ~1 MB, so there's a moment
+       of nothing otherwise), and
+    2. a light theme so the editor uses the society's colours and fonts.
+  Neither changes how Decap works — remove both and it still runs.
+-->
+<style>
+:root{
+  --forest:#154024;--forest-deep:#0C2916;--forest-glow:#1E5A34;
+  --rust:#AA3E21;--rust-bright:#C74A27;--cream:#F3E7C8;--gold:#E08A2E;--gold-soft:#F0B15E;--ink:#14261B;
+  --display:"Fraunces","Iowan Old Style",Georgia,serif;
+  --text:"Karla","Segoe UI",system-ui,-apple-system,sans-serif;
+  --ease:cubic-bezier(.2,.8,.3,1);--ease-draw:cubic-bezier(.6,.02,.25,1);
+}
+
+/* =============================================================
+   LOADING SCREEN — shown until Decap has drawn its first screen
+   ============================================================= */
+#bsoc-loader{
+  position:fixed;inset:0;z-index:9999;display:grid;place-items:center;color:var(--cream);
+  background:var(--forest);background-image:radial-gradient(110% 80% at 80% 0%,#1E5A34 0%,#154024 42%,#0C2916 100%);
+  transition:opacity .5s ease,visibility .5s;
+}
+#bsoc-loader::before{content:"";position:absolute;inset:0;opacity:.05;pointer-events:none;
+  background:repeating-linear-gradient(115deg,transparent 0 26px,#F3E7C8 26px 30px,transparent 30px 58px,#F3E7C8 58px 60px)}
+#bsoc-loader.done{opacity:0;visibility:hidden}
+.ld{display:grid;justify-items:center;gap:1.3rem;text-align:center;padding:2rem}
+.ld svg{width:min(210px,50vw);height:auto;overflow:visible;filter:drop-shadow(0 20px 30px rgba(0,0,0,.35))}
+.ld .ink{fill:none;stroke:var(--cream);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ld .ink-thin{stroke-width:1.3;stroke:rgba(243,231,200,.72)}
+.ld .seed{fill:var(--gold)}
+.ld .crest{transform-origin:200px 200px}
+.ld .orbit{transform-origin:200px 200px}
+.ld h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:-.01em;line-height:1.1}
+.ld h1 em{font-style:italic;color:var(--gold-soft)}
+.ld p{margin:0;font-family:var(--text);font-size:.95rem;color:rgba(243,231,200,.8)}
+.ld .dots i{display:inline-block;width:5px;height:5px;margin-left:3px;border-radius:50%;background:var(--gold-soft);vertical-align:middle}
+.ld .rule{width:5rem;height:2px;background:var(--gold);transform-origin:left center}
+@media (prefers-reduced-motion: no-preference){
+  .ld .ink{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.3s var(--ease-draw) forwards}
+  .ld .seed{opacity:0;animation:pop .5s ease forwards}
+  .ld .crest{scale:.25;opacity:0;animation:rise .9s var(--ease) .1s forwards}
+  .ld .orbit{animation:spin 40s linear infinite}
+  .ld h1,.ld p{opacity:0;animation:lift .8s var(--ease) forwards}
+  .ld h1{animation-delay:.35s}.ld p{animation-delay:.5s}
+  .ld .rule{transform:scaleX(0);animation:rule .8s var(--ease-draw) .25s forwards}
+  .ld .dots i{animation:blink 1.2s ease-in-out infinite}
+  .ld .dots i:nth-child(2){animation-delay:.2s}.ld .dots i:nth-child(3){animation-delay:.4s}
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{to{opacity:1}}
+@keyframes rise{to{scale:1;opacity:1}}
+@keyframes spin{to{rotate:360deg}}
+@keyframes lift{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes rule{to{transform:scaleX(1)}}
+@keyframes blink{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-2px)}}
+
+/* =============================================================
+   THEME — nudges Decap's own UI towards the site's palette.
+   Decap's class names are generated (css-xxxx-ComponentName), so we
+   match on the readable component suffix. If Decap renames a
+   component the rule simply stops applying; nothing breaks.
+   ============================================================= */
+body{font-family:var(--text)}
+#nc-root{--nc-bg:#FAF4E6}
+#nc-root [class*="-AppHeader"]:not([class*="Content"]):not([class*="Button"]):not([class*="Link"]):not([class*="Actions"]):not([class*="List"]),
+#nc-root header[class*="AppHeader"]{
+  background:rgba(12,41,22,.96) !important;border-bottom:1px solid rgba(243,231,200,.12) !important;box-shadow:none !important;
+}
+#nc-root [class*="-AppHeaderNavLink"],#nc-root [class*="-AppHeaderButton"]{color:var(--cream) !important;font-family:var(--text) !important;font-weight:600 !important}
+#nc-root [class*="-AppHeaderNavLink"][class*="active"],#nc-root [class*="-AppHeaderNavLink"].active,#nc-root [class*="-AppHeaderNavLink"]:hover{color:var(--gold-soft) !important;background:rgba(243,231,200,.08) !important}
+#nc-root [class*="-AppHeaderNavLink"] svg,#nc-root [class*="-AppHeaderButton"] svg{color:inherit !important}
+/* primary buttons: "Quick add", "Login with Netlify Identity", "Publish", "Save" */
+#nc-root [class*="-LoginButton"],
+#nc-root [class*="-AppHeaderQuickNewButton"],
+#nc-root [class*="-PublishButton"],
+#nc-root [class*="-SaveButton"],
+#nc-root [class*="-StyledDropdownButton"][class*="Publish"]{
+  background:var(--rust-bright) !important;color:#fff !important;border-radius:999px !important;
+  font-family:var(--text) !important;font-weight:700 !important;box-shadow:0 8px 18px rgba(199,74,39,.3) !important;
+  transition:transform .2s var(--ease),background-color .2s ease !important;
+}
+#nc-root [class*="-LoginButton"]:hover,#nc-root [class*="-AppHeaderQuickNewButton"]:hover,#nc-root [class*="-PublishButton"]:hover{background:var(--rust) !important;transform:translateY(-2px)}
+/* login page */
+#nc-root [class*="-StyledAuthenticationPage"],#nc-root [class*="-AuthenticationPage"]{
+  background:#FAF4E6 !important;background-image:linear-gradient(170deg,#FCF7EC 0%,#F6EDD9 34%,#EFE4C6 68%,#F8F1E1 100%) !important;
+}
+#nc-root [class*="-CustomLogoIcon"],#nc-root [class*="-PageLogoIcon"]{width:120px !important;height:120px !important;border-radius:50% !important;box-shadow:0 18px 40px rgba(20,38,27,.18)}
+/* sidebar + cards */
+#nc-root [class*="-SidebarHeading"],#nc-root [class*="-CardHeading"],#nc-root [class*="-ListCardTitle"],#nc-root [class*="-WorkflowTopHeading"],#nc-root [class*="-CollectionTopHeading"],#nc-root h1,#nc-root h2{font-family:var(--display) !important;font-weight:500 !important;letter-spacing:-.01em}
+#nc-root [class*="-SidebarNavLink"][class*="active"],#nc-root [class*="-SidebarNavLink"].active{color:var(--forest) !important;background:rgba(21,64,36,.08) !important;border-left:3px solid var(--gold) !important}
+#nc-root [class*="-Card"]{border-radius:16px !important}
+#nc-root [class*="-ListCardLink"]:hover,#nc-root [class*="-GridCardLink"]:hover{border-color:var(--gold) !important;box-shadow:0 18px 40px rgba(20,38,27,.12) !important}
+/* status pill colours in the workflow board */
+#nc-root [class*="-WorkflowListContainer"] [class*="-Column"] h2{font-family:var(--display) !important}
+/* focus ring in our gold, everywhere */
+#nc-root :focus-visible{outline:2.5px solid var(--gold) !important;outline-offset:2px}
+</style>
+<!-- Netlify Identity: Decap's git-gateway backend uses this widget to log in.
+     It also handles invite / recovery links that land on this page. -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+
+<!-- ===================== LOADING SCREEN ===================== -->
+<div id="bsoc-loader" aria-live="polite">
+  <div class="ld">
+    <svg viewBox="0 0 400 400" role="img" aria-label="Bangla Society crest">
+      <defs>
+        <path id="petal" pathLength="1" d="M200 104 C 176 84, 174 56, 200 30 C 226 56, 224 84, 200 104 Z"/>
+        <path id="leaf" pathLength="1" d="M200 106 C 188 92, 187 72, 200 56 C 213 72, 212 92, 200 106 Z"/>
+        <clipPath id="crestClip"><circle cx="200" cy="200" r="96"/></clipPath>
+      </defs>
+      <image class="crest" href="/assets/logo.png" x="104" y="104" width="192" height="192" clip-path="url(#crestClip)"/>
+      <g class="orbit">
+        <use class="ink" href="#petal" style="animation-delay:.3s"/>
+        <use class="ink" href="#petal" transform="rotate(45 200 200)" style="animation-delay:.38s"/>
+        <use class="ink" href="#petal" transform="rotate(90 200 200)" style="animation-delay:.46s"/>
+        <use class="ink" href="#petal" transform="rotate(135 200 200)" style="animation-delay:.54s"/>
+        <use class="ink" href="#petal" transform="rotate(180 200 200)" style="animation-delay:.62s"/>
+        <use class="ink" href="#petal" transform="rotate(225 200 200)" style="animation-delay:.7s"/>
+        <use class="ink" href="#petal" transform="rotate(270 200 200)" style="animation-delay:.78s"/>
+        <use class="ink" href="#petal" transform="rotate(315 200 200)" style="animation-delay:.86s"/>
+        <use class="ink ink-thin" href="#leaf" transform="rotate(22.5 200 200)" style="animation-delay:.9s"/>
+        <use class="ink ink-thin" href="#leaf" transform="rotate(67.5 200 200)" style="animation-delay:.95s"/>
+        <use class="ink ink-thin" href="#leaf" transform="rotate(112.5 200 200)" style="animation-delay:1s"/>
+        <use class="ink ink-thin" href="#leaf" transform="rotate(157.5 200 200)" style="animation-delay:1.05s"/>
+        <use class="ink ink-thin" href="#leaf" transform="rotate(202.5 200 200)" style="animation-delay:1.1s"/>
+        <use class="ink ink-thin" href="#leaf" transform="rotate(247.5 200 200)" style="animation-delay:1.15s"/>
+        <use class="ink ink-thin" href="#leaf" transform="rotate(292.5 200 200)" style="animation-delay:1.2s"/>
+        <use class="ink ink-thin" href="#leaf" transform="rotate(337.5 200 200)" style="animation-delay:1.25s"/>
+        <circle class="ink ink-thin" cx="200" cy="200" r="182" pathLength="1" style="animation-delay:1.2s"/>
+        <circle class="seed" cx="200" cy="8" r="4.5" style="animation-delay:1.7s"/>
+        <circle class="seed" cx="336" cy="64" r="4.5" style="animation-delay:1.75s"/>
+        <circle class="seed" cx="392" cy="200" r="4.5" style="animation-delay:1.8s"/>
+        <circle class="seed" cx="336" cy="336" r="4.5" style="animation-delay:1.85s"/>
+        <circle class="seed" cx="200" cy="392" r="4.5" style="animation-delay:1.9s"/>
+        <circle class="seed" cx="64" cy="336" r="4.5" style="animation-delay:1.95s"/>
+        <circle class="seed" cx="8" cy="200" r="4.5" style="animation-delay:2s"/>
+        <circle class="seed" cx="64" cy="64" r="4.5" style="animation-delay:2.05s"/>
+      </g>
+    </svg>
+    <div class="rule"></div>
+    <h1>Opening the <em>editor</em></h1>
+    <p>Bangla Society committee <span class="dots"><i></i><i></i><i></i></span></p>
+  </div>
+</div>
+
+<!-- Decap mounts itself into <body> (creating #nc-root) and reads /admin/config.yml. -->
+<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+<script src="/admin/cms.js"></script>
+
+<script>
+// ---- hide the loading screen once Decap has drawn something ----
+// Decap creates #nc-root and renders into it. We watch for that, keep the
+// crest on screen for at least ~1.4s so the draw-in animation completes, then
+// fade. A 12s ceiling guards against a blocked CDN — you'd see Decap's own
+// error rather than a spinner forever.
+(function () {
+  var loader = document.getElementById('bsoc-loader');
+  var start = Date.now(), MIN = 1400, MAX = 12000, done = false;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function finish() {
+    if (done) return; done = true;
+    var wait = reduce ? 0 : Math.max(0, MIN - (Date.now() - start));
+    setTimeout(function () {
+      loader.classList.add('done');
+      loader.addEventListener('transitionend', function () { loader.remove(); }, { once: true });
+      setTimeout(function () { if (loader.parentNode) loader.remove(); }, 800);
+    }, wait);
+  }
+  var mo = new MutationObserver(function () {
+    var root = document.getElementById('nc-root');
+    if (root && root.children.length) { mo.disconnect(); finish(); }
+  });
+  mo.observe(document.body, { childList: true, subtree: true });
+  setTimeout(finish, MAX);
+})();
+</script>
+</body>
+</html>
