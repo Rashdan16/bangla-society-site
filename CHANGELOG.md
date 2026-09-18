@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026-09-18] - Runbook click paths verified against current Netlify UI
+- SETUP.md: "Add new project", Identity menu paths, invite path, note that
+  invite-only users are unlimited on current plans and that Decap needs the
+  classic Identity widget.
+- Files affected: SETUP.md, admin/ROLES.md
+
 ## [2026-09-18] - Publish directly, no approval step
 - Switched Decap to `publish_mode: simple`: pressing Publish commits to `main`
   and Netlify rebuilds; no pull requests, no GitHub accounts for members.

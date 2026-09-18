@@ -40,13 +40,14 @@ git push -u origin main
 
 ## 2. Connect the repo to Netlify
 
-1. **app.netlify.com → Add new site → Import an existing project → GitHub.**
-   Authorise Netlify, pick `bangla-society-site`.
+1. **app.netlify.com → Add new project → Import an existing project → GitHub.**
+   Authorise Netlify, pick `bangla-society-site`. (Netlify calls sites
+   "projects" now; older screenshots and guides say "site".)
 2. Build settings are read from `netlify.toml`, so leave the form as it is
    (publish directory `.`, build command `node scripts/index-content.js`).
-   Click **Deploy site**.
+   Click **Deploy**.
 3. When the deploy finishes, note the URL (e.g. `https://sparkly-tiger-1234.netlify.app`).
-   Rename it if you like: **Site configuration → Site details → Change site name.**
+   Rename it if you like: **Project configuration → General → Project details → Change project name.**
 4. Put that URL into `admin/config.yml` (`site_url` and `display_url`, replacing
    `CHANGE-ME`), commit and push. This is what the editor's "View site" link uses.
 
@@ -54,24 +55,33 @@ The public site now works. `/admin/` will load but you can't log in yet.
 
 ## 3. Turn on Netlify Identity (invite-only)
 
-1. In the site's dashboard: **Site configuration → Identity → Enable Identity.**
-2. **Identity → Registration** → choose **Invite only** → Save.
+1. In the project's left-hand menu: **Identity → Enable Identity.**
+2. **Identity → Registration → Registration preferences → Configure** → choose
+   **Invite only** → Save.
    *(This is the real gate: no one can create an account themselves.)*
 3. **Identity → Registration → External providers:** leave off. Email + password
    is simplest for handover.
-4. Optional, recommended: **Identity → Emails → Invitation template** — the
-   default email is fine; leave the path as `/` (the homepage forwards invite
-   links to the dashboard automatically).
+4. Leave the email templates alone. Invite links open the homepage with a token,
+   and the homepage forwards them to the dashboard automatically.
+
+**User limits:** on current Netlify plans (including Free) invite-only users are
+unlimited, so the whole committee fits. Only old "legacy" plans had a 5-user cap.
+
+**About the login widget:** the editor and dashboard use Netlify's classic
+`netlify-identity-widget.js`. Netlify now recommends a newer `@netlify/identity`
+package for new projects, but Decap's Git Gateway login is built around the
+classic widget, which still works. Nothing to do here; just don't be alarmed if
+the Netlify docs call it "previously recommended".
 
 ## 4. Turn on Git Gateway
 
-1. **Site configuration → Identity → Services → Git Gateway → Enable Git Gateway.**
+1. **Identity → Services → Git Gateway → Enable Git Gateway.**
 2. Netlify may ask you to authorise GitHub again; the branch to use is `main`
    (leave the "Roles" box empty — any logged-in user may use the editor).
 
 ## 5. Invite the first committee members
 
-1. **Identity → Invite users** → enter the emails (one at a time or several).
+1. **Identity → Users → Invite users** → enter the emails (one at a time or several).
 2. Each person gets an email → the link opens `dashboard.html` on your site →
    they set a password → they land on the committee dashboard → **Open the editor**.
 3. Test it yourself first: invite your own email, accept, open `/admin/`, edit an
@@ -142,7 +152,8 @@ Nothing about `content/` or the site changes.
 | Login button does nothing / "Failed to load settings" | Identity isn't enabled on *this* site (step 3), or you're on a deploy-preview URL — use the main site URL. |
 | "Git Gateway Error: Please ask your site administrator to reissue the Git Gateway token" | Netlify → Identity → Services → Git Gateway → *Edit settings* → regenerate token. |
 | New event published but not on the site | Wait a minute and hard-refresh; check the **Deploys** tab for a failed build. Also check the event's "Published" toggle. |
-| Site shows old content after a merge | Netlify build failed or is still running: **Deploys** tab. The build only runs `node scripts/index-content.js`. |
+| Site shows old content after publishing | Netlify build failed or is still running: **Deploys** tab. The build only runs `node scripts/index-content.js`. |
+| Netlify says the free plan needs upgrading for Identity | Only legacy plans have Identity limits. Current credit-based plans include unlimited invite-only users. |
 | Invite link opens the homepage and nothing happens | The redirect script at the bottom of `index.html` sends `#invite_token` to the dashboard; make sure that script is still there. |
 
 ## Later (needs a backend — not built yet)

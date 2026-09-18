@@ -43,8 +43,8 @@ page says what is *enforced by software* and what is *just an agreement*.
 
 ## Adding a new committee member (handover checklist)
 
-1. **Netlify → your site → Identity → Invite users.** Enter their email. They get
-   a link that opens `/dashboard.html`, where they set a password.
+1. **Netlify → the project → Identity → Users → Invite users.** Enter their
+   email. They get a link that opens `/dashboard.html`, where they set a password.
 2. Update the table at the top of this file and the contacts on
    `dashboard.html`.
 3. **Leaving?** Netlify → Identity → the person → *Delete user*. Their past edits
@@ -61,7 +61,7 @@ five-minute jobs.
 
 | Setting | Where |
 |---|---|
-| Invite-only registration | Netlify → Identity → Registration → *Invite only* |
+| Invite-only registration | Netlify → Identity → Registration → Registration preferences → *Invite only* |
 | Git Gateway | Netlify → Identity → Services → Git Gateway |
 | Publishing mode (instant vs. reviewed) | `admin/config.yml` → `publish_mode` |
 | What the editor can edit | `admin/config.yml` |
