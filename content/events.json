@@ -1,0 +1,20 @@
+[
+  {
+    "slug": "2026-09-24-freshers-welcome",
+    "title": "Freshers' welcome",
+    "date": "2026-09-24",
+    "time": "6:00pm",
+    "venue": "Percy Gee Building, Students’ Union",
+    "description": "Our opening social of the year, with tea, snacks and introductions to the committee.",
+    "published": true
+  },
+  {
+    "slug": "2026-12-16-victory-day",
+    "title": "Victory Day",
+    "date": "2026-12-16",
+    "time": "6:30pm",
+    "venue": "Percy Gee Building, Students’ Union",
+    "description": "Marking 16 December 1971 with a short evening of history, music and food.",
+    "published": true
+  }
+]

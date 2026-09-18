@@ -1,0 +1,58 @@
+[
+  {
+    "slug": "new-year-celebration",
+    "caption": "New Year celebration",
+    "image": "",
+    "size": "wide tall",
+    "order": 1
+  },
+  {
+    "slug": "community-iftar",
+    "caption": "Community iftar",
+    "image": "",
+    "size": "normal",
+    "order": 2
+  },
+  {
+    "slug": "mother-language-day",
+    "caption": "Mother Language Day",
+    "image": "",
+    "size": "normal",
+    "order": 3
+  },
+  {
+    "slug": "food-night",
+    "caption": "Food night",
+    "image": "",
+    "size": "normal",
+    "order": 4
+  },
+  {
+    "slug": "charity-bake-sale",
+    "caption": "Charity bake sale",
+    "image": "",
+    "size": "normal",
+    "order": 5
+  },
+  {
+    "slug": "freshers-welcome",
+    "caption": "Freshers' welcome",
+    "image": "",
+    "size": "wide",
+    "order": 6
+  },
+  {
+    "slug": "film-screening",
+    "caption": "Film screening",
+    "image": "",
+    "size": "normal",
+    "order": 7
+  },
+  {
+    "slug": "farewell-meal",
+    "caption": "Farewell meal",
+    "image": "",
+    "size": "normal",
+    "order": 8
+  }
+]
