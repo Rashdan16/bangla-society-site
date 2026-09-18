@@ -12,8 +12,8 @@
       content/events.json   — every event, oldest date first
       content/photos.json   — every photo, by `order` then caption
 
-  It uses ONLY Node's built-in modules (no npm install, no package.json). Netlify
-  runs it as the build command (see netlify.toml), so the manifests are rebuilt on
+  It uses ONLY Node's built-in modules (no npm install, no package.json). Vercel
+  runs it as the build command (see vercel.json), so the manifests are rebuilt on
   every deploy — including after a committee member's CMS change is merged.
 
   Run it locally after editing content by hand:

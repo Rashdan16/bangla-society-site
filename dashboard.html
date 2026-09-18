@@ -12,11 +12,11 @@
 <!--
   dashboard.html — the committee's front door.
 
-  Sign in with Netlify Identity (the same account the editor uses), see what's
-  live right now, and jump into /admin/ to change it. Invite emails land here.
+  See what's live right now and jump into /admin/ to change it. The login lives
+  inside the editor (DecapBridge), so this page has no gate of its own.
 
-  Honest note on security: the sign-in gate hides this page's content from casual
-  visitors, but the HTML is public — anyone can read it in "view source". Keep
+  Honest note: everything on this page is public. That's fine — it only shows
+  what the homepage already shows, plus names and placeholder links. Keep
   genuinely private things (budgets, minutes) in the linked drives, not here.
   Real access control is on *publishing*: see admin/ROLES.md.
 -->
@@ -108,11 +108,12 @@ a{color:inherit}
 .pagehead h1{font-family:var(--display);font-weight:400;font-size:clamp(2.2rem,4.6vw,3.2rem);line-height:1.08;margin:0 0 .6rem;letter-spacing:-.01em}
 .pagehead h1 em{font-style:italic;color:var(--gold-soft)}
 .pagehead p{margin:0;max-width:54ch;color:rgba(243,231,200,.82);font-size:1.02rem}
-.who{display:none;align-items:center;gap:.9rem;padding:.6rem .8rem .6rem .6rem;border:1.4px solid rgba(243,231,200,.25);border-radius:999px;background:rgba(12,41,22,.35);font-size:.9rem}
+.who{display:none;align-items:center;gap:.9rem;padding:.6rem 1.1rem .6rem .6rem;border:1.4px solid rgba(243,231,200,.25);border-radius:999px;background:rgba(12,41,22,.35);font-size:.9rem;text-decoration:none;transition:border-color .2s ease,background-color .2s ease,transform .2s var(--ease)}
 .who.on{display:inline-flex}
+.who:hover{border-color:var(--gold);background:rgba(224,138,46,.12);transform:translateY(-2px)}
 .who .av{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#2A1A06;display:grid;place-items:center;font-family:var(--display);font-weight:600;font-size:1.05rem;flex:none}
 .who b{display:block;font-weight:700;line-height:1.15}
-.who small{display:block;opacity:.7;font-size:.78rem;line-height:1.2;max-width:22ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who small{display:block;opacity:.7;font-size:.78rem;line-height:1.2;max-width:32ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .who button{background:none;border:1.3px solid rgba(243,231,200,.35);color:inherit;font:inherit;font-size:.78rem;font-weight:700;border-radius:999px;padding:.3rem .7rem;cursor:pointer;transition:all .2s var(--ease)}
 .who button:hover{background:var(--gold);border-color:var(--gold);color:#2A1A06}
 
@@ -138,33 +139,6 @@ h2 em{font-style:italic;color:var(--accent)}
 .btn:hover svg{transform:translateX(3px)}
 .btn-ghost{background:none;color:var(--fg);border-color:var(--rule-strong);box-shadow:none}
 .btn-ghost:hover{background:var(--forest);border-color:var(--forest);color:var(--cream);box-shadow:none}
-
-/* =============================================================
-   SIGN-IN GATE
-   ============================================================= */
-.gate{min-height:56vh;display:grid;place-items:center;padding:3rem 4vw}
-.gate-card{position:relative;max-width:440px;width:100%;background:var(--card);border:1.5px solid var(--rule);border-radius:22px;padding:2.4rem 2.1rem 2.1rem;box-shadow:var(--shadow-lg);text-align:center;overflow:hidden}
-.gate-card::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--rust-bright))}
-.gate-card .lock{position:relative;width:64px;height:64px;margin:0 auto 1.1rem;display:grid;place-items:center;border-radius:50%;background:var(--forest);color:var(--cream);box-shadow:0 0 0 0 rgba(224,138,46,.35)}
-.gate-card .lock svg{width:26px;height:26px}
-.gate-card .lock .shackle{transform-origin:9px 10px;transition:transform .5s var(--ease)}
-.gate-card.open .lock .shackle{transform:rotate(-28deg) translate(1px,-1px)}
-.gate-card h2{margin:0 0 .4rem;font-size:1.5rem}
-.gate-card p{margin:0 0 1.5rem;color:var(--muted);font-size:.95rem}
-.gate-card .btn{width:100%}
-.gate-card .fine{margin:1.1rem 0 0;font-size:.8rem;color:var(--muted)}
-.gate-card .fine a{color:var(--accent)}
-.gate-card .local{margin-top:1rem;padding-top:1rem;border-top:1px dashed var(--rule)}
-.gate-card .local button{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;text-decoration:underline;cursor:pointer}
-.gate-status{margin:.9rem 0 0;font-size:.85rem;font-weight:700;color:var(--rust-bright)}
-@media (prefers-reduced-motion: no-preference){
-  .gate-card{animation:cardIn .7s var(--ease) both}
-  .gate-card .lock{animation:halo 2.6s ease-out 1s infinite}
-}
-@keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:none}}
-@keyframes halo{0%{box-shadow:0 0 0 0 rgba(224,138,46,.4)}70%{box-shadow:0 0 0 18px rgba(224,138,46,0)}100%{box-shadow:0 0 0 0 rgba(224,138,46,0)}}
-@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-6px)}40%,60%{transform:translateX(6px)}}
-.shake{animation:shake .45s}
 
 /* =============================================================
    AT A GLANCE
@@ -283,8 +257,6 @@ h2 em{font-style:italic;color:var(--accent)}
 .totop:hover{background:var(--gold);border-color:var(--gold);color:#2A1A06}
 .totop svg{width:14px;height:14px}
 </style>
-<!-- Netlify Identity: sign-in for the committee; also handles invite / recovery links. -->
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 
@@ -313,37 +285,18 @@ h2 em{font-style:italic;color:var(--accent)}
     <div class="matra">
       <span class="kicker">Committee</span>
       <h1 id="headline">Committee <em>dashboard</em></h1>
-      <p id="headsub">Sign in to see what's live, open the editor and keep the site up to date. Committee members only.</p>
+      <p id="headsub">What's live on the site right now, and where to change it. You'll be asked to sign in when you open the editor.</p>
     </div>
-    <div class="who" id="who">
-      <span class="av" id="whoAv">?</span>
-      <span><b id="whoName">Signed in</b><small id="whoMail"></small></span>
-      <button type="button" id="signOut">Sign out</button>
-    </div>
+    <a class="who on" href="admin/">
+      <span class="av" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16v4Z"/><path d="M12.5 7.5l4 4"/></svg></span>
+      <span><b>Open the editor</b><small>Sign in with your invite email</small></span>
+    </a>
   </div>
 </header>
 
 <main>
 
-  <!-- ===================== SIGN-IN GATE ===================== -->
-  <div class="gate" id="gate">
-    <div class="gate-card" id="gateCard">
-      <span class="lock" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10" rx="2.5"/><path class="shackle" d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
-      </span>
-      <h2>Committee sign-in</h2>
-      <p>Use the account from your invitation email. Nothing to register — accounts are invite only.</p>
-      <button type="button" class="btn" id="signIn">Sign in <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-      <p class="gate-status" id="gateStatus" hidden></p>
-      <p class="fine">No account yet? Ask the President or Secretary for an invite. Forgotten your password? Sign in &rarr; <em>Forgot password</em>.</p>
-      <div class="local" id="localHint" hidden>
-        <button type="button" id="localPreview">Preview without signing in (local development only)</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== SIGNED-IN CONTENT ===================== -->
-  <div id="committeeContent" hidden>
+  <div id="committeeContent">
 
     <!-- At a glance -->
     <section class="section">
@@ -419,7 +372,7 @@ h2 em{font-style:italic;color:var(--accent)}
           </svg>
           <div class="step reveal" style="--i:0"><span class="n">1</span><strong>You edit</strong><p>In the editor, fill in the form. The preview on the right shows exactly what visitors will see.</p></div>
           <div class="step reveal" style="--i:2"><span class="n">2</span><strong>You publish</strong><p>Press <b>Publish</b>. The change is saved to the site's history with your name on it.</p></div>
-          <div class="step reveal" style="--i:4"><span class="n">3</span><strong>It's live</strong><p>Netlify rebuilds the site automatically. Refresh the homepage after about a minute. Made a mistake? Edit again, or ask <b>Rashdan</b> to roll back.</p></div>
+          <div class="step reveal" style="--i:4"><span class="n">3</span><strong>It's live</strong><p>Vercel rebuilds the site automatically. Refresh the homepage after about a minute. Made a mistake? Edit again, or ask <b>Rashdan</b> to roll back.</p></div>
         </div>
       </div>
     </section>
@@ -478,7 +431,7 @@ h2 em{font-style:italic;color:var(--accent)}
             </tbody>
           </table>
         </div>
-        <p class="note">"Please don't" is an agreement, not a lock &mdash; the editor can't hide screens per person. Nobody needs a GitHub account: you sign in with the email you were invited on. Full detail in <a href="admin/ROLES.md">admin/ROLES.md</a>.</p>
+        <p class="note">"Please don't" is an agreement, not a lock &mdash; the editor can't hide screens per person. Nobody needs a GitHub account: you sign in to the editor with the email you were invited on. Full detail in <a href="admin/ROLES.md">admin/ROLES.md</a>.</p>
       </div>
     </section>
 
@@ -490,18 +443,13 @@ h2 em{font-style:italic;color:var(--accent)}
   <div class="wrap">
     <div class="stripe"><i></i><i class="r"></i><i></i></div>
     <div class="foot-bottom">
-      <small>&copy; 2026 University of Leicester Bangla Society. Committee dashboard &mdash; the page is public HTML, so keep private documents in the linked drives.</small>
+      <small>&copy; 2026 University of Leicester Bangla Society. Committee dashboard &mdash; this page is public, so keep private documents in the linked drives.</small>
       <a class="totop" href="index.html">Back to site <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></a>
     </div>
   </div>
 </footer>
 
 <script>
-// =============================================================================
-//  SETTINGS
-// =============================================================================
-var IDENTITY_URL = '';      // only for local previews: 'https://<your-site>.netlify.app/.netlify/identity'
-
 // ---- mobile menu ----
 (function () {
   var btn = document.querySelector('.nav-toggle'), menu = document.getElementById('menu');
@@ -546,66 +494,9 @@ function countUp(el) {
   requestAnimationFrame(tick);
 }
 
-// =============================================================================
-//  SIGN-IN (Netlify Identity)
-//  The widget handles the modal, password reset and invite acceptance. We just
-//  react to its events. See the note at the top of the file about what this
-//  gate does and doesn't protect.
-// =============================================================================
-(function () {
-  var gate = document.getElementById('gate'), card = document.getElementById('gateCard');
-  var content = document.getElementById('committeeContent');
-  var who = document.getElementById('who');
-  var status = document.getElementById('gateStatus');
-  var widget = window.netlifyIdentity;
-  var isLocal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
-
-  function unlock(user) {
-    var name = (user && user.user_metadata && user.user_metadata.full_name) || (user && user.email ? user.email.split('@')[0] : 'Committee');
-    var first = name.split(/[\s.]+/)[0];
-    document.getElementById('whoName').textContent = name;
-    document.getElementById('whoMail').textContent = (user && user.email) || 'local preview';
-    document.getElementById('whoAv').textContent = first.charAt(0).toUpperCase();
-    document.getElementById('headline').innerHTML = 'Hello, <em>' + first.replace(/[<>&]/g, '') + '</em>';
-    document.getElementById('headsub').textContent = 'Here’s what’s live on the site and where to change it.';
-    who.classList.add('on');
-    card.classList.add('open');
-    // Let the padlock swing open before the page changes underneath it.
-    setTimeout(function () {
-      gate.hidden = true; content.hidden = false;
-      watch(content);
-      loadOverview();
-    }, reduce ? 0 : 420);
-  }
-  function lock() {
-    who.classList.remove('on'); card.classList.remove('open');
-    content.hidden = true; gate.hidden = false;
-    document.getElementById('headline').innerHTML = 'Committee <em>dashboard</em>';
-    document.getElementById('headsub').textContent = 'Sign in to see what’s live, open the editor and keep the site up to date. Committee members only.';
-  }
-
-  document.getElementById('signIn').addEventListener('click', function () {
-    if (!widget) { status.hidden = false; status.textContent = 'The sign-in widget failed to load — check your connection and reload.'; card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake'); return; }
-    widget.open('login');
-  });
-  document.getElementById('signOut').addEventListener('click', function () { if (widget && widget.currentUser()) widget.logout(); else lock(); });
-
-  if (widget) {
-    widget.on('init', function (user) { if (user) unlock(user); else lock(); });
-    widget.on('login', function (user) { unlock(user); widget.close(); });
-    widget.on('logout', lock);
-    widget.on('error', function (err) { status.hidden = false; status.textContent = (err && err.message) || 'Sign-in failed. Try again.'; });
-    if (IDENTITY_URL) widget.init({ APIUrl: IDENTITY_URL });
-  }
-
-  // Local development: Identity has no site to talk to, so offer a preview.
-  // This is only shown when the page is served from localhost — on the real
-  // site the button doesn't exist.
-  if (isLocal && !IDENTITY_URL) {
-    document.getElementById('localHint').hidden = false;
-    document.getElementById('localPreview').addEventListener('click', function () { unlock({ email: 'you@localhost', user_metadata: { full_name: 'Local preview' } }); });
-  }
-})();
+// ---- go: reveal the page and load the live overview ----
+watch(document);
+loadOverview();
 
 // =============================================================================
 //  OVERVIEW — read the same content files the homepage uses

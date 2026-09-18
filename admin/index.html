@@ -13,8 +13,9 @@
   /admin/  — the Decap CMS editor.
 
   Decap is a React app loaded from a CDN; it reads /admin/config.yml for what to
-  edit and /admin/cms.js for the live previews. This page only adds two things
-  of our own:
+  edit and /admin/cms.js for the live previews. Login is handled by DecapBridge
+  (configured in config.yml) — Decap shows its own email/password form for it.
+  This page only adds two things of our own:
     1. a branded loading screen (the CMS bundle is ~1 MB, so there's a moment
        of nothing otherwise), and
     2. a light theme so the editor uses the society's colours and fonts.
@@ -86,7 +87,7 @@ body{font-family:var(--text)}
 #nc-root [class*="-AppHeaderNavLink"],#nc-root [class*="-AppHeaderButton"]{color:var(--cream) !important;font-family:var(--text) !important;font-weight:600 !important}
 #nc-root [class*="-AppHeaderNavLink"][class*="active"],#nc-root [class*="-AppHeaderNavLink"].active,#nc-root [class*="-AppHeaderNavLink"]:hover{color:var(--gold-soft) !important;background:rgba(243,231,200,.08) !important}
 #nc-root [class*="-AppHeaderNavLink"] svg,#nc-root [class*="-AppHeaderButton"] svg{color:inherit !important}
-/* primary buttons: "Quick add", "Login with Netlify Identity", "Publish", "Save" */
+/* primary buttons: "Quick add", "Login", "Publish", "Save" */
 #nc-root [class*="-LoginButton"],
 #nc-root [class*="-AppHeaderQuickNewButton"],
 #nc-root [class*="-PublishButton"],
@@ -112,9 +113,9 @@ body{font-family:var(--text)}
 /* focus ring in our gold, everywhere */
 #nc-root :focus-visible{outline:2.5px solid var(--gold) !important;outline-offset:2px}
 </style>
-<!-- Netlify Identity: Decap's git-gateway backend uses this widget to log in.
-     It also handles invite / recovery links that land on this page. -->
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<!-- Decap loads /admin/config.yml. The explicit link means it still finds the
+     file if the page is ever served at /admin (no trailing slash). -->
+<link rel="cms-config-url" type="text/yaml" href="/admin/config.yml">
 </head>
 <body>
 

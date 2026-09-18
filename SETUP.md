@@ -1,108 +1,116 @@
 # SETUP — getting the site and the committee editor live
 
 Follow this top to bottom once. Afterwards, day-to-day editing is all in
-`/admin/` and needs none of this. Budget about 30 minutes.
+`/admin/` and needs none of this. Budget about 45 minutes, most of it waiting
+for DNS.
 
 What you'll end up with:
 
-- the public site on Netlify, rebuilt automatically whenever `main` changes
-- the editor at `https://<your-site>/admin/`, log-in by invite only
-- committee members publishing with one click — no GitHub accounts needed
-  for anyone except you, the maintainer
+- the public site on **Vercel**, at your own domain, rebuilt automatically
+  whenever `main` changes
+- the editor at `https://<your-domain>/admin/`, log-in by invite only through
+  **DecapBridge** — committee members need an email address, nothing else
+- one-click publishing, no approval step
 
-> **Heads-up on Git Gateway.** Netlify has marked Git Gateway as *deprecated*:
-> it still works and can still be switched on, but Netlify no longer develops
-> it. Netlify Identity itself is staying. If Git Gateway is ever turned off, see
-> [If Git Gateway goes away](#if-git-gateway-goes-away) — it's a three-line swap.
+Accounts you need (all free tiers): GitHub (you already have it), Vercel,
+DecapBridge. Nobody else on the committee needs any of them.
 
 ---
 
-## 0. Before you start
+## 1. Push the site to GitHub
 
-- A GitHub account for **you only**. Nobody else on the committee needs one.
-- A Netlify account (free tier is fine). Sign up with GitHub to skip a step.
-- Node.js installed locally if you want to preview the site (`node -v`).
+Already done if you followed along in GitHub Desktop: the `bangla-society-site`
+repository is published as **private** under your account. If not: **File → Add
+local repository** → pick the `bangla-society-site` folder → **Publish
+repository** → tick *Keep this code private*.
 
-## 1. Put the site on GitHub
+Note your repo path in the form `GITHUB-USERNAME/bangla-society-site`; you'll
+need it twice below.
 
-```bash
-cd bangla-society-site
-git status              # should say "nothing to commit" — the history is already here
-```
+## 2. Deploy on Vercel
 
-On GitHub: **New repository** → name it `bangla-society-site` → **Private** →
-*don't* add a README/.gitignore → **Create**. Then:
+1. **vercel.com → Add New → Project → Import** the `bangla-society-site` repo
+   (authorise Vercel's GitHub app if asked, giving it access to just this repo).
+2. On the configure screen, Vercel reads `vercel.json`, so the fields should
+   already show: Framework Preset **Other**, Build Command
+   `node scripts/index-content.js`, Output Directory `.`. Leave everything else
+   empty and press **Deploy**.
+3. After a minute you get a `https://bangla-society-site-….vercel.app` URL. The
+   homepage works now. `/admin/` loads but can't log in yet.
 
-```bash
-git remote add origin https://github.com/<OWNER>/bangla-society-site.git
-git push -u origin main
-```
+## 3. Set up DecapBridge (the editor login)
 
-## 2. Connect the repo to Netlify
+1. **decapbridge.com → Sign up** (use your own email) → **Create site**.
+2. Repository: `GITHUB-USERNAME/bangla-society-site`. Auth method: **Classic**
+   (email + password; simplest for handover).
+3. DecapBridge needs permission to commit to the repo. It asks for a GitHub
+   token: **GitHub → Settings → Developer settings → Personal access tokens →
+   Fine-grained tokens → Generate new token.** Name it `decapbridge`, choose
+   *Only select repositories* → `bangla-society-site`, and under *Repository
+   permissions* set **Contents: Read and write**. Copy it into DecapBridge.
+   (Set an expiry you'll remember, e.g. one year; DecapBridge will tell you when
+   it stops working, and you just paste a new one.)
+4. DecapBridge shows a config snippet with your **site id**. You don't need to
+   paste the whole snippet: open `admin/config.yml` and replace the two
+   placeholders in the `backend:` block:
 
-1. **app.netlify.com → Add new project → Import an existing project → GitHub.**
-   Authorise Netlify, pick `bangla-society-site`. (Netlify calls sites
-   "projects" now; older screenshots and guides say "site".)
-2. Build settings are read from `netlify.toml`, so leave the form as it is
-   (publish directory `.`, build command `node scripts/index-content.js`).
-   Click **Deploy**.
-3. When the deploy finishes, note the URL (e.g. `https://sparkly-tiger-1234.netlify.app`).
-   Rename it if you like: **Project configuration → General → Project details → Change project name.**
-4. Put that URL into `admin/config.yml` (`site_url` and `display_url`, replacing
-   `CHANGE-ME`), commit and push. This is what the editor's "View site" link uses.
+   ```yaml
+   repo: GITHUB-USERNAME/bangla-society-site
+   identity_url: https://auth.decapbridge.com/sites/DECAPBRIDGE-SITE-ID
+   ```
 
-The public site now works. `/admin/` will load but you can't log in yet.
+5. Commit and push (GitHub Desktop: write a summary, **Commit**, **Push origin**).
+   Vercel redeploys automatically.
+6. Test: open `https://…vercel.app/admin/`, log in with the DecapBridge account
+   you just made, change an event, press **Publish**. A commit appears on GitHub
+   and Vercel starts a build; a minute later the homepage shows it.
 
-## 3. Turn on Netlify Identity (invite-only)
+## 4. Connect your domain
 
-1. In the project's left-hand menu: **Identity → Enable Identity.**
-2. **Identity → Registration → Registration preferences → Configure** → choose
-   **Invite only** → Save.
-   *(This is the real gate: no one can create an account themselves.)*
-3. **Identity → Registration → External providers:** leave off. Email + password
-   is simplest for handover.
-4. Leave the email templates alone. Invite links open the homepage with a token,
-   and the homepage forwards them to the dashboard automatically.
+1. **Vercel → the project → Settings → Domains → Add.** Enter your domain, e.g.
+   `bangla-society.co.uk`. Accept Vercel's suggestion to add `www.` as well and
+   redirect one to the other (pick whichever you want people to see).
+2. Vercel shows the DNS records to add. Log in to wherever you bought the domain
+   and add exactly those. Typically:
 
-**User limits:** on current Netlify plans (including Free) invite-only users are
-unlimited, so the whole committee fits. Only old "legacy" plans had a 5-user cap.
+   | Type | Name | Value |
+   |---|---|---|
+   | `A` | `@` | `76.76.21.21` (use the value Vercel shows you) |
+   | `CNAME` | `www` | the `….vercel-dns….com` value Vercel shows you |
 
-**About the login widget:** the editor and dashboard use Netlify's classic
-`netlify-identity-widget.js`. Netlify now recommends a newer `@netlify/identity`
-package for new projects, but Decap's Git Gateway login is built around the
-classic widget, which still works. Nothing to do here; just don't be alarmed if
-the Netlify docs call it "previously recommended".
+   Delete any existing `A` or `CNAME` records for `@` and `www` that the
+   registrar put there as "parking" pages.
+3. Back in Vercel the domain flips to **Valid configuration** once DNS
+   propagates — usually minutes, occasionally a few hours. HTTPS is automatic.
+4. Put the final address into `admin/config.yml` (`site_url` and `display_url`,
+   replacing `CHANGE-ME`, e.g. `https://www.bangla-society.co.uk`). Commit and
+   push.
 
-## 4. Turn on Git Gateway
+## 5. Invite the committee
 
-1. **Identity → Services → Git Gateway → Enable Git Gateway.**
-2. Netlify may ask you to authorise GitHub again; the branch to use is `main`
-   (leave the "Roles" box empty — any logged-in user may use the editor).
+1. **DecapBridge → your site → Manage collaborators → Invite** → enter an email.
+2. They get an email with a link, set a password (or choose Google/Microsoft if
+   you enabled PKCE), and land in the editor at `/admin/`.
+3. Point them at `https://<your-domain>/dashboard.html` as the bookmark: it
+   shows what's live and has the **Open the editor** button.
 
-## 5. Invite the first committee members
-
-1. **Identity → Users → Invite users** → enter the emails (one at a time or several).
-2. Each person gets an email → the link opens `dashboard.html` on your site →
-   they set a password → they land on the committee dashboard → **Open the editor**.
-3. Test it yourself first: invite your own email, accept, open `/admin/`, edit an
-   event, press **Publish** → a new commit appears on GitHub and Netlify starts a
-   deploy (the **Deploys** tab). About a minute later the homepage shows it.
+Free tier: 3 sites and 10 collaborators per site — enough for the committee.
 
 ## 6. Day-to-day: how a change goes live
 
 ```
-member edits in /admin/  →  Publish  →  commit on main  →  Netlify rebuilds (~1 min)  →  live
+member edits in /admin/  →  Publish  →  commit on main  →  Vercel rebuilds (~1 min)  →  live
 ```
 
 There is no review step. If someone publishes something wrong, fix it in the
-editor, or roll the whole site back in one click: **Netlify → Deploys → the last
-good deploy → Publish deploy**.
+editor, or roll the whole site back: **Vercel → Deployments → the last good one
+→ ⋯ → Instant Rollback**.
 
 Role table and the handover checklist: [`admin/ROLES.md`](admin/ROLES.md).
 
 > Want a review step later? Set `publish_mode: editorial_workflow` in
-> `admin/config.yml`. Saves then become GitHub pull requests, and whoever has
-> write access on the repo approves them.
+> `admin/config.yml` and give the DecapBridge token *Pull requests: Read and
+> write* as well. Saves then become GitHub pull requests you merge.
 
 ---
 
@@ -122,45 +130,22 @@ terminal, then open `http://localhost:8001/admin/`. Decap notices the proxy on
 localhost and writes straight to your files. This is only ever active on
 localhost.
 
-## If Git Gateway goes away
-
-[DecapBridge](https://decapbridge.com) is a free hosted replacement that speaks
-the same protocol. Sign up, add the site, and it gives you a site id. Then:
-
-1. In `admin/config.yml`, replace the `backend:` block with
-
-   ```yaml
-   backend:
-     name: git-gateway
-     repo: <OWNER>/bangla-society-site
-     branch: main
-     identity_url: https://auth.decapbridge.com/sites/<SITE-ID>
-     gateway_url: https://gateway.decapbridge.com
-   ```
-
-2. In `admin/index.html` and `dashboard.html`, remove the
-   `netlify-identity-widget.js` script tag (DecapBridge shows its own login).
-3. Invite members from the DecapBridge dashboard instead of Netlify Identity.
-
-Nothing about `content/` or the site changes.
-
 ## Troubleshooting
 
 | Symptom | Cause / fix |
 |---|---|
 | `/admin/` shows "Error loading the CMS configuration" | Syntax error in `admin/config.yml`. The message names the line. |
-| Login button does nothing / "Failed to load settings" | Identity isn't enabled on *this* site (step 3), or you're on a deploy-preview URL — use the main site URL. |
-| "Git Gateway Error: Please ask your site administrator to reissue the Git Gateway token" | Netlify → Identity → Services → Git Gateway → *Edit settings* → regenerate token. |
-| New event published but not on the site | Wait a minute and hard-refresh; check the **Deploys** tab for a failed build. Also check the event's "Published" toggle. |
-| Site shows old content after publishing | Netlify build failed or is still running: **Deploys** tab. The build only runs `node scripts/index-content.js`. |
-| Netlify says the free plan needs upgrading for Identity | Only legacy plans have Identity limits. Current credit-based plans include unlimited invite-only users. |
-| Invite link opens the homepage and nothing happens | The redirect script at the bottom of `index.html` sends `#invite_token` to the dashboard; make sure that script is still there. |
+| Login form says the email or password is wrong | They haven't accepted the DecapBridge invite yet, or used a different email. Re-send from *Manage collaborators*. |
+| "Failed to persist entry" / commit errors after login | The GitHub token DecapBridge holds has expired or lacks *Contents: write*. Generate a new fine-grained token and paste it into DecapBridge. |
+| New event published but not on the site | Wait a minute and hard-refresh; check **Vercel → Deployments** for a failed build. Also check the event's "Published" toggle. |
+| Domain shows "Invalid configuration" | Compare the records at your registrar with what Vercel's Domains page shows; remove conflicting parking records. Give it up to a few hours. |
+| Uploaded photo shows in the editor but not on the site | The build hasn't finished, or the file is very large. Keep photos under ~1 MB. |
 
 ## Later (needs a backend — not built yet)
 
-- **RSVP / headcount** — a Netlify Form (or Function + store) per event; slot a
-  form under each `.ev-card` in `renderEvents()` and a count on the dashboard.
-- **Membership enquiry form** — Netlify Forms with an email notification;
-  add a `<form netlify>` to the Socials section.
+- **RSVP / headcount** — a small Vercel Function plus a store (or Supabase);
+  slot a form under each `.ev-card` in `renderEvents()` and a count on the dashboard.
+- **Membership enquiry form** — a form service (Formspree, Tally) or a Vercel
+  Function that emails the committee; add it to the Socials section.
 - **Academic-year archive** — add a `year` field to Events in `config.yml`,
   a `view_groups` entry to group by it, and filter in `renderEvents()`.

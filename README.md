@@ -6,15 +6,15 @@ Static site: `index.html` + `assets/`, with the content the committee edits in
 ## Structure
 
     index.html                 the public homepage (HTML + CSS + JS inline)
-    dashboard.html             committee dashboard: sign in, see what's live, open the editor
+    dashboard.html             committee dashboard: see what's live, open the editor
     admin/                     the editor (Decap CMS): index.html, config.yml, cms.js, preview.css
     admin/ROLES.md             who can do what, and how to add a committee member
     content/events/*.md        one file per event   → content/events.json (generated)
     content/photos/*.md        one file per photo   → content/photos.json (generated)
     content/settings/*.json    links, charity total, announcement banner
     scripts/index-content.js   builds the two generated JSON files (Node, no deps)
-    netlify.toml               deploy settings, redirects, headers
-    SETUP.md                   the full runbook (Netlify, Identity, GitHub protection)
+    vercel.json                deploy settings, redirects, headers
+    SETUP.md                   the full runbook (Vercel, DecapBridge, your domain)
     assets/logo.png            society crest
     assets/committee-*.jpg     the seven "Meet the 2026 Committee" cards
     assets/photos/             gallery uploads from the editor
@@ -32,13 +32,13 @@ directly no longer works. To try the editor without logging in, also run
 ## Editing content
 
 Committee members sign in at `/dashboard.html` and click **Open the editor**.
-Pressing Publish commits to `main` and Netlify rebuilds the site in about a
-minute. No GitHub accounts needed for members.
+Pressing Publish commits to `main` and Vercel rebuilds the site in about a
+minute. Login is through DecapBridge; no GitHub accounts needed for members.
 Details: `SETUP.md` (one-off setup) and `admin/ROLES.md` (day-to-day roles).
 
 ## Things still to fill in
 
-- `admin/config.yml`: `site_url` / `display_url`
+- `admin/config.yml`: `repo`, `identity_url` (from DecapBridge), `site_url` / `display_url`
 - `dashboard.html`: the four quick links, contact emails
 - Through the editor: WhatsApp link, SU membership link, donate link, photos
 

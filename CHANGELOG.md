@@ -1,5 +1,17 @@
 # Changelog
 
+## [2026-09-18] - Host on Vercel with DecapBridge login
+- Replaced netlify.toml with vercel.json (build command, output dir, redirects,
+  headers). Editor login moves from Netlify Identity + Git Gateway to
+  DecapBridge; members still need only an email address.
+- admin/index.html: Identity widget removed, explicit config link added.
+- dashboard.html: sign-in gate removed (login lives inside the editor); header
+  gets an "Open the editor" button. index.html: invite-token redirect removed.
+- SETUP.md rewritten for Vercel, DecapBridge and a custom domain; ROLES.md and
+  README updated.
+- Files affected: vercel.json (new), netlify.toml (deleted), admin/config.yml,
+  admin/index.html, dashboard.html, index.html, SETUP.md, admin/ROLES.md, README.md
+
 ## [2026-09-18] - Runbook click paths verified against current Netlify UI
 - SETUP.md: "Add new project", Identity menu paths, invite path, note that
   invite-only users are unlimited on current plans and that Decap needs the

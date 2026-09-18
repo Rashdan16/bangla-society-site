@@ -5,9 +5,9 @@
 #
 #  ┌─ ACCESS CONTROL: WHAT IS REAL AND WHAT IS CONVENTION ─────────────────────┐
 #  │ REAL (enforced by software):                                               │
-#  │  • Only people with a Netlify Identity account (invite-only) can log in.  │
+#  │  • Only people invited through DecapBridge can log in.                    │
 #  │  • Every save is a git commit on `main`, so anything can be undone by the │
-#  │    site maintainer (git revert / Netlify "rollback").                      │
+#  │    site maintainer (git revert / Vercel "instant rollback").               │
 #  │ CONVENTION (not enforced — anyone logged in can open every screen):        │
 #  │  • Pressing "Publish" puts the change live straight away, no approval.    │
 #  │  • "Site settings → Charity" and "→ Links" are for the Treasurer /         │
@@ -16,29 +16,26 @@
 #  └────────────────────────────────────────────────────────────────────────────┘
 # =============================================================================
 
+# ── Login + commits: DecapBridge (https://decapbridge.com) ─────────────────────
+# DecapBridge is a small hosted service that gives Decap an email/password login
+# and commits to GitHub on the editor's behalf. Members never need GitHub
+# accounts. The two placeholders come from the DecapBridge dashboard after you
+# create the site there (SETUP.md step 3).
 backend:
-  name: git-gateway            # Netlify Identity users → commits via Netlify's Git Gateway
+  name: git-gateway            # DecapBridge speaks the same protocol as Netlify's old Git Gateway
+  repo: GITHUB-USERNAME/bangla-society-site      # ← your GitHub user/org + repo
   branch: main
+  identity_url: https://auth.decapbridge.com/sites/DECAPBRIDGE-SITE-ID   # ← from DecapBridge
+  gateway_url: https://gateway.decapbridge.com
   commit_messages:
     create:      "content: add {{collection}} “{{slug}}”"
     update:      "content: update {{collection}} “{{slug}}”"
     delete:      "content: delete {{collection}} “{{slug}}”"
     uploadMedia: "media: upload {{path}}"
     deleteMedia: "media: delete {{path}}"
-  # ── Migration note ──────────────────────────────────────────────────────────
-  # Netlify has deprecated Git Gateway (still works, no longer developed). If it
-  # is ever switched off, swap to DecapBridge — a drop-in that speaks the same
-  # protocol — by replacing the block above with:
-  #   name: git-gateway
-  #   repo: OWNER/REPO
-  #   branch: main
-  #   identity_url: https://auth.decapbridge.com/sites/<site-id>
-  #   gateway_url: https://gateway.decapbridge.com
-  # and removing the Netlify Identity widget <script> from admin/index.html.
-  # Nothing else on the site changes. See SETUP.md → "If Git Gateway goes away".
 
 # Publishing mode: "simple" (the default) — pressing Publish commits straight to
-# `main` and Netlify rebuilds the site within a minute. No review step.
+# `main` and Vercel rebuilds the site within a minute. No review step.
 # To add an approval step later, set `publish_mode: editorial_workflow` here;
 # saves then become GitHub pull requests that an approver merges.
 publish_mode: simple
@@ -47,11 +44,10 @@ publish_mode: simple
 # then open http://localhost:8001/admin/. Only takes effect on localhost.
 local_backend: true
 
-# The public site, for the "View site" link in the editor header and the
-# "View preview" links in the Workflow tab. Change once to your real domain
-# (SETUP.md step 2) — e.g. https://bangla-society.netlify.app or a custom domain.
-site_url: "https://CHANGE-ME.netlify.app"
-display_url: "https://CHANGE-ME.netlify.app"
+# The public site, for the "View site" link in the editor header.
+# Set to your own domain (SETUP.md step 4), e.g. https://www.example.co.uk
+site_url: "https://CHANGE-ME"
+display_url: "https://CHANGE-ME"
 
 media_folder: "assets"         # where uploads are committed
 public_folder: "/assets"       # how the site refers to them (absolute so /admin/ previews resolve)
