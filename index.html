@@ -472,7 +472,7 @@ h2 em{font-style:italic;color:var(--accent)}
       <li><a href="#events">Events</a></li>
       <li><a href="#photos">Photos</a></li>
       <li><a href="#charity">Charity</a></li>
-      <li><a href="admin.html">Admin</a></li>
+      <li><a href="dashboard.html">Admin</a></li>
     </ul>
   </div>
   <div class="progress" id="progress"></div>
@@ -772,7 +772,7 @@ h2 em{font-style:italic;color:var(--accent)}
         <ul>
           <li><a href="#" data-placeholder data-link="su_membership">Students&rsquo; Union page</a></li>
           <li><a href="#committee">Committee</a></li>
-          <li><a href="admin.html">Admin</a></li>
+          <li><a href="dashboard.html">Admin</a></li>
           <li><a href="mailto:hello@example.ac.uk">Email us</a></li>
         </ul>
       </div>
@@ -790,6 +790,14 @@ h2 em{font-style:italic;color:var(--accent)}
 </div>
 
 <script>
+// ---- Netlify Identity invite / recovery links ----
+// Invitation and password-reset emails link to the site root with a token in the
+// hash. The public page doesn't load the Identity widget (keeps it light), so we
+// forward those links to the committee dashboard, which does.
+if (/^#(invite_token|recovery_token|confirmation_token|email_change_token)=/.test(location.hash)) {
+  location.replace('/dashboard.html' + location.hash);
+}
+
 // ---- nav: mobile menu, scroll progress, active link ----
 (function () {
   var btn = document.querySelector('.nav-toggle'), menu = document.getElementById('menu');
