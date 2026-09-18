@@ -1,42 +1,46 @@
 # University of Leicester Bangla Society — website
 
-Static single-page site. No build step, no dependencies.
+Static site: `index.html` + `assets/`, with the content the committee edits in
+`content/` and a Decap CMS editor at `/admin/`. No framework, no bundler.
 
 ## Structure
 
-    index.html              the public homepage (HTML + CSS + JS inline)
-    admin.html              private committee admin area, password-gated
-    assets/logo.png         society crest (circular, transparent edges)
-    assets/committee-*.jpg  the seven "Meet the 2026 Committee" cards
+    index.html                 the public homepage (HTML + CSS + JS inline)
+    dashboard.html             committee dashboard: sign in, see what's live, open the editor
+    admin/                     the editor (Decap CMS): index.html, config.yml, cms.js, preview.css
+    admin/ROLES.md             who can do what, and how to add a committee member
+    content/events/*.md        one file per event   → content/events.json (generated)
+    content/photos/*.md        one file per photo   → content/photos.json (generated)
+    content/settings/*.json    links, charity total, announcement banner
+    scripts/index-content.js   builds the two generated JSON files (Node, no deps)
+    netlify.toml               deploy settings, redirects, headers
+    SETUP.md                   the full runbook (Netlify, Identity, GitHub protection)
+    assets/logo.png            society crest
+    assets/committee-*.jpg     the seven "Meet the 2026 Committee" cards
+    assets/photos/             gallery uploads from the editor
 
 ## Run locally
 
-    python3 -m http.server 8001
-    # then open http://localhost:8001
+    node scripts/index-content.js   # only needed after editing content/*.md by hand
+    python -m http.server 8001
+    # open http://localhost:8001
 
-Opening index.html directly in a browser also works.
+The homepage fetches `content/*.json`, so it needs a server — opening the file
+directly no longer works. To try the editor without logging in, also run
+`npx decap-server` and open http://localhost:8001/admin/.
 
-## Admin page
+## Editing content
 
-`admin.html` is linked from the "Admin" button in the homepage nav and
-footer (the "Committee" button instead scrolls to the public "Meet the
-committee" section on the homepage). Admin is gated behind a client-side
-password check (currently `1234`, set the `PASSWORD` variable in the
-`<script>` at the bottom of the file to change it) — this only deters
-casual visitors, since anyone can view the page source and read both the
-password and the gated content. Don't put anything genuinely sensitive on
-it. Once unlocked it stays unlocked for the browser session
-(`sessionStorage`).
+Committee members sign in at `/dashboard.html` and click **Open the editor**.
+Every save becomes a pull request; an approver merges it and Netlify rebuilds.
+Details: `SETUP.md` (one-off setup) and `admin/ROLES.md` (day-to-day roles).
 
 ## Things still to fill in
 
-- Social links: WhatsApp group, SU membership page
-  (search for `data-placeholder` in index.html and admin.html)
-- Charity donate link
-- Photos section: eight placeholder tiles, class `.shot`, expect ~4:3 images
-- Event times and venues are invented; only Sep 24 and Dec 16 dates are set
-- Admin page quick links (meeting notes, shared drive, budget tracker,
-  committee chat) and contact emails are all placeholders
+- `admin/config.yml`: `site_url` / `display_url`
+- `.github/CODEOWNERS`: the President's and Treasurer's GitHub usernames
+- `dashboard.html`: `GITHUB_REPO`, the four quick links, contact emails
+- Through the editor: WhatsApp link, SU membership link, donate link, photos
 
 ## Notes
 
@@ -44,3 +48,5 @@ it. Once unlocked it stays unlocked for the browser session
   gold #E08A2E, cream #F3E7C8). Dark mode overrides live just below.
 - Fonts are Fraunces (display) and Karla (body), loaded from Google Fonts.
 - All motion is wrapped in `prefers-reduced-motion: no-preference`.
+- `admin/preview.css` mirrors the homepage component styles for the editor's
+  live preview; update it if those components change.

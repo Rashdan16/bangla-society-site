@@ -3,178 +3,277 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Admin — University of Leicester Bangla Society</title>
+<title>Committee dashboard — University of Leicester Bangla Society</title>
 <meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..700&family=Karla:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  dashboard.html — the committee's front door.
+
+  Sign in with Netlify Identity (the same account the editor uses), see what's
+  live right now, and jump into /admin/ to change it. Invite emails land here.
+
+  Honest note on security: the sign-in gate hides this page's content from casual
+  visitors, but the HTML is public — anyone can read it in "view source". Keep
+  genuinely private things (budgets, minutes) in the linked drives, not here.
+  Real access control is on *publishing*: see admin/ROLES.md.
+-->
 <style>
+/* =============================================================
+   TOKENS (same as index.html)
+   ============================================================= */
 :root{
-  --forest:#154024;
-  --forest-deep:#0C2916;
-  --forest-glow:#1E5A34;
-  --rust:#AA3E21;
-  --rust-bright:#C74A27;
-  --cream:#F3E7C8;
-  --gold:#E08A2E;
-  --gold-soft:#F0B15E;
-  --ink:#14261B;
-
-  --bg:#FAF4E6;
-  --fg:var(--ink);
-  --muted:rgba(20,38,27,.68);
-  --rule:rgba(20,38,27,.16);
-  --rule-strong:rgba(20,38,27,.3);
-  --panel:#F3EAD6;
-  --card:#FFFDF7;
-  --accent:var(--forest);
-  --meta:var(--rust-bright);
+  --forest:#154024;--forest-deep:#0C2916;--forest-glow:#1E5A34;
+  --rust:#AA3E21;--rust-bright:#C74A27;--cream:#F3E7C8;--gold:#E08A2E;--gold-soft:#F0B15E;--ink:#14261B;
+  --bg:#FAF4E6;--fg:var(--ink);--muted:rgba(20,38,27,.68);--rule:rgba(20,38,27,.16);--rule-strong:rgba(20,38,27,.3);
+  --panel:#F3EAD6;--card:#FFFDF7;--accent:var(--forest);--meta:var(--rust-bright);
   --grad:linear-gradient(170deg,#FCF7EC 0%,#F6EDD9 34%,#EFE4C6 68%,#F8F1E1 100%);
-  --shadow:0 18px 40px rgba(20,38,27,.12);
-  --shadow-lg:0 30px 70px rgba(20,38,27,.18);
-
+  --veil:rgba(20,64,36,.05);--shadow:0 18px 40px rgba(20,38,27,.12);--shadow-lg:0 30px 70px rgba(20,38,27,.18);
   --display:"Fraunces","Iowan Old Style",Georgia,"Times New Roman",serif;
   --text:"Karla","Segoe UI",system-ui,-apple-system,sans-serif;
-  --ease:cubic-bezier(.2,.8,.3,1);
+  --ease:cubic-bezier(.2,.8,.3,1);--ease-draw:cubic-bezier(.6,.02,.25,1);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0E2D19; --fg:#F1E8D3; --muted:rgba(241,232,211,.68);
-    --rule:rgba(241,232,211,.16); --rule-strong:rgba(241,232,211,.34);
-    --panel:#123720; --card:#143C24; --accent:#8FC79E; --meta:#E8A85A;
+    --bg:#0E2D19;--fg:#F1E8D3;--muted:rgba(241,232,211,.68);--rule:rgba(241,232,211,.16);--rule-strong:rgba(241,232,211,.34);
+    --panel:#123720;--card:#143C24;--accent:#8FC79E;--meta:#E8A85A;
     --grad:linear-gradient(170deg,#11361E 0%,#0C2716 38%,#0A2113 66%,#10331D 100%);
-    --shadow:0 18px 40px rgba(0,0,0,.35); --shadow-lg:0 30px 70px rgba(0,0,0,.5);
+    --veil:rgba(243,231,200,.045);--shadow:0 18px 40px rgba(0,0,0,.35);--shadow-lg:0 30px 70px rgba(0,0,0,.5);
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0E2D19; --fg:#F1E8D3; --muted:rgba(241,232,211,.68);
-  --rule:rgba(241,232,211,.16); --rule-strong:rgba(241,232,211,.34);
-  --panel:#123720; --card:#143C24; --accent:#8FC79E; --meta:#E8A85A;
+  --bg:#0E2D19;--fg:#F1E8D3;--muted:rgba(241,232,211,.68);--rule:rgba(241,232,211,.16);--rule-strong:rgba(241,232,211,.34);
+  --panel:#123720;--card:#143C24;--accent:#8FC79E;--meta:#E8A85A;
   --grad:linear-gradient(170deg,#11361E 0%,#0C2716 38%,#0A2113 66%,#10331D 100%);
-  --shadow:0 18px 40px rgba(0,0,0,.35); --shadow-lg:0 30px 70px rgba(0,0,0,.5);
+  --veil:rgba(243,231,200,.045);--shadow:0 18px 40px rgba(0,0,0,.35);--shadow-lg:0 30px 70px rgba(0,0,0,.5);
 }
 
+/* =============================================================
+   BASE
+   ============================================================= */
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  margin:0;color:var(--fg);
-  background:var(--bg);background-image:var(--grad);background-attachment:fixed;
-  font-family:var(--text);font-size:clamp(18px,1.2vw + 15px,21px);line-height:1.68;
-  overflow-x:hidden;-webkit-font-smoothing:antialiased;
-}
+body{margin:0;color:var(--fg);background:var(--bg);background-image:var(--grad);background-attachment:fixed;font-family:var(--text);font-size:clamp(17px,1.1vw + 14px,20px);line-height:1.62;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 img{max-width:100%}
 a{color:inherit}
 ::selection{background:var(--gold);color:#2A1A06}
 :focus-visible{outline:2.5px solid var(--gold);outline-offset:3px;border-radius:4px}
 .wrap{width:min(1120px,92vw);margin-inline:auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+[hidden]{display:none !important}
 
-/* nav */
-.nav{
-  position:sticky;top:0;z-index:60;color:var(--cream);
-  background:rgba(12,41,22,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(243,231,200,.1);
-}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:calc(var(--i,0) * 70ms)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* =============================================================
+   NAV (same as index.html)
+   ============================================================= */
+.nav{position:sticky;top:0;z-index:60;color:var(--cream);background:rgba(12,41,22,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(243,231,200,.1)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.6rem 0}
 .brand{display:flex;align-items:center;gap:.65rem;text-decoration:none;min-width:0}
-.brand img{width:46px;height:46px;flex:none;transition:transform .5s var(--ease)}
-.brand:hover img{transform:rotate(-8deg) scale(1.06)}
+.brand img{width:46px;height:46px;flex:none;transition:transform .5s var(--ease),filter .3s ease}
+.brand:hover img{transform:rotate(-8deg) scale(1.06);filter:drop-shadow(0 0 10px rgba(224,138,46,.75))}
 .brand span{font-family:var(--display);font-weight:500;font-size:1.18rem;line-height:1.1}
 .brand span small{display:block;font-family:var(--text);font-weight:700;font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;opacity:.7;margin-bottom:.12rem}
 .nav-links{display:flex;gap:.2rem;list-style:none;margin:0;padding:0;font-size:1.02rem;font-weight:600}
-.nav-links a{
-  position:relative;display:block;text-decoration:none;padding:.55rem .9rem;border-radius:999px;
-  transition:background-color .2s ease,color .2s ease;white-space:nowrap;
-}
-.nav-links a::after{
-  content:"";position:absolute;left:.75rem;right:.75rem;bottom:.25rem;height:1.5px;
-  background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease);
-}
+.nav-links a{position:relative;display:block;text-decoration:none;padding:.55rem .9rem;border-radius:999px;transition:background-color .2s ease,color .2s ease;white-space:nowrap}
+.nav-links a::after{content:"";position:absolute;left:.75rem;right:.75rem;bottom:.25rem;height:1.5px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease)}
 .nav-links a:hover{background:rgba(243,231,200,.08)}
 .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
 .nav-links a.active{color:var(--gold-soft)}
 .nav-toggle{display:none;background:none;border:1.4px solid rgba(243,231,200,.35);color:inherit;font:inherit;font-weight:600;border-radius:999px;padding:.35rem .85rem;cursor:pointer}
 @media (max-width:960px){
   .nav-toggle{display:block}
-  .nav-links{
-    display:none;position:absolute;left:0;right:0;top:100%;
-    background:rgba(12,41,22,.97);flex-direction:column;gap:0;
-    padding:.5rem 4vw 1rem;border-top:1px solid rgba(243,231,200,.14);
-  }
+  .nav-links{display:none;position:absolute;left:0;right:0;top:100%;background:rgba(12,41,22,.97);flex-direction:column;gap:0;padding:.5rem 4vw 1rem;border-top:1px solid rgba(243,231,200,.14)}
   .nav-links.open{display:flex}
   .nav-links a{padding:.75rem .4rem;border-radius:0;border-bottom:1px solid rgba(243,231,200,.1)}
   .nav-links a::after{display:none}
 }
 @media (max-width:420px){.brand span{font-size:.9rem}.brand img{width:32px;height:32px}}
 
-/* page header */
-.pagehead{
-  position:relative;color:var(--cream);background:var(--forest);
-  background-image:radial-gradient(110% 80% at 80% 0%,#1E5A34 0%,#154024 42%,#0C2916 100%);
-  padding:clamp(2.4rem,5vw,3.6rem) 0;
-}
+/* =============================================================
+   PAGE HEADER
+   ============================================================= */
+.pagehead{position:relative;isolation:isolate;overflow:hidden;color:var(--cream);background:var(--forest);background-image:radial-gradient(110% 80% at 80% 0%,#1E5A34 0%,#154024 42%,#0C2916 100%);padding:clamp(2.6rem,5.5vw,4rem) 0}
+.pagehead::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.05;pointer-events:none;background:repeating-linear-gradient(115deg,transparent 0 26px,#F3E7C8 26px 30px,transparent 30px 58px,#F3E7C8 58px 60px)}
+.pagehead::after{content:"";position:absolute;z-index:-1;width:50vw;height:50vw;max-width:560px;max-height:560px;right:-10vw;top:50%;transform:translateY(-50%);border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(224,138,46,.2) 0%,rgba(224,138,46,0) 62%)}
+.head-grid{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:end}
+@media (max-width:760px){.head-grid{grid-template-columns:1fr}}
 .matra{border-top:1.8px solid rgba(243,231,200,.32);padding-top:1rem;transform-origin:left center;max-width:60ch}
-.kicker{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--text);font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:.7rem}
+.kicker{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--text);font-size:.95rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:.7rem}
 .kicker::before{content:"";width:22px;height:2px;background:currentColor;border-radius:2px}
-.pagehead h1{font-family:var(--display);font-weight:400;font-size:clamp(2.1rem,4.4vw,3rem);line-height:1.1;margin:0 0 .6rem;letter-spacing:-.01em}
+.pagehead h1{font-family:var(--display);font-weight:400;font-size:clamp(2.2rem,4.6vw,3.2rem);line-height:1.08;margin:0 0 .6rem;letter-spacing:-.01em}
 .pagehead h1 em{font-style:italic;color:var(--gold-soft)}
-.pagehead p{margin:0;max-width:54ch;color:rgba(243,231,200,.82);font-size:1.05rem}
+.pagehead p{margin:0;max-width:54ch;color:rgba(243,231,200,.82);font-size:1.02rem}
+.who{display:none;align-items:center;gap:.9rem;padding:.6rem .8rem .6rem .6rem;border:1.4px solid rgba(243,231,200,.25);border-radius:999px;background:rgba(12,41,22,.35);font-size:.9rem}
+.who.on{display:inline-flex}
+.who .av{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#2A1A06;display:grid;place-items:center;font-family:var(--display);font-weight:600;font-size:1.05rem;flex:none}
+.who b{display:block;font-weight:700;line-height:1.15}
+.who small{display:block;opacity:.7;font-size:.78rem;line-height:1.2;max-width:22ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who button{background:none;border:1.3px solid rgba(243,231,200,.35);color:inherit;font:inherit;font-size:.78rem;font-weight:700;border-radius:999px;padding:.3rem .7rem;cursor:pointer;transition:all .2s var(--ease)}
+.who button:hover{background:var(--gold);border-color:var(--gold);color:#2A1A06}
 
-/* sections */
-.section{padding:clamp(3rem,6.5vw,4.6rem) 0}
-h2{font-family:var(--display);font-weight:400;font-size:clamp(1.5rem,3vw,2rem);line-height:1.15;margin:0 0 1.2rem;letter-spacing:-.01em}
+@media (prefers-reduced-motion: no-preference){
+  .pagehead .kicker,.pagehead h1,.pagehead p,.who{opacity:0;animation:lift .8s var(--ease) forwards}
+  .pagehead .kicker{animation-delay:.1s}.pagehead h1{animation-delay:.22s}.pagehead p{animation-delay:.36s}.who{animation-delay:.5s}
+  .matra{transform:scaleX(0);animation:rule .9s var(--ease-draw) .05s forwards}
+}
+@keyframes lift{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes rule{to{transform:scaleX(1)}}
 
-/* password gate */
-.gate{min-height:52vh;display:grid;place-items:center;padding:3rem 4vw}
-.gate-card{
-  max-width:400px;width:100%;background:var(--card);border:1.5px solid var(--rule);
-  border-radius:20px;padding:2.2rem 2rem;box-shadow:var(--shadow-lg);text-align:center;
+/* =============================================================
+   SECTIONS
+   ============================================================= */
+.section{padding:clamp(2.6rem,5.5vw,4rem) 0}
+.section + .section{padding-top:0}
+h2{font-family:var(--display);font-weight:400;font-size:clamp(1.55rem,3vw,2.05rem);line-height:1.15;margin:0 0 1.1rem;letter-spacing:-.01em}
+h2 em{font-style:italic;color:var(--accent)}
+.sub{margin:-.6rem 0 1.4rem;color:var(--muted);font-size:.98rem;max-width:60ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;text-decoration:none;padding:.85rem 1.5rem;border-radius:999px;font-weight:700;font-size:1rem;cursor:pointer;border:1.6px solid transparent;background:var(--rust-bright);color:#fff;font-family:inherit;box-shadow:0 10px 24px rgba(199,74,39,.3);transition:transform .2s var(--ease),background-color .2s ease,box-shadow .2s ease}
+.btn:hover{transform:translateY(-2px);background:var(--rust);box-shadow:0 14px 30px rgba(199,74,39,.4)}
+.btn svg{width:17px;height:17px;transition:transform .2s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+.btn-ghost{background:none;color:var(--fg);border-color:var(--rule-strong);box-shadow:none}
+.btn-ghost:hover{background:var(--forest);border-color:var(--forest);color:var(--cream);box-shadow:none}
+
+/* =============================================================
+   SIGN-IN GATE
+   ============================================================= */
+.gate{min-height:56vh;display:grid;place-items:center;padding:3rem 4vw}
+.gate-card{position:relative;max-width:440px;width:100%;background:var(--card);border:1.5px solid var(--rule);border-radius:22px;padding:2.4rem 2.1rem 2.1rem;box-shadow:var(--shadow-lg);text-align:center;overflow:hidden}
+.gate-card::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--rust-bright))}
+.gate-card .lock{position:relative;width:64px;height:64px;margin:0 auto 1.1rem;display:grid;place-items:center;border-radius:50%;background:var(--forest);color:var(--cream);box-shadow:0 0 0 0 rgba(224,138,46,.35)}
+.gate-card .lock svg{width:26px;height:26px}
+.gate-card .lock .shackle{transform-origin:9px 10px;transition:transform .5s var(--ease)}
+.gate-card.open .lock .shackle{transform:rotate(-28deg) translate(1px,-1px)}
+.gate-card h2{margin:0 0 .4rem;font-size:1.5rem}
+.gate-card p{margin:0 0 1.5rem;color:var(--muted);font-size:.95rem}
+.gate-card .btn{width:100%}
+.gate-card .fine{margin:1.1rem 0 0;font-size:.8rem;color:var(--muted)}
+.gate-card .fine a{color:var(--accent)}
+.gate-card .local{margin-top:1rem;padding-top:1rem;border-top:1px dashed var(--rule)}
+.gate-card .local button{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;text-decoration:underline;cursor:pointer}
+.gate-status{margin:.9rem 0 0;font-size:.85rem;font-weight:700;color:var(--rust-bright)}
+@media (prefers-reduced-motion: no-preference){
+  .gate-card{animation:cardIn .7s var(--ease) both}
+  .gate-card .lock{animation:halo 2.6s ease-out 1s infinite}
 }
-.gate-card .lock{width:44px;height:44px;margin:0 auto 1rem;display:grid;place-items:center;border-radius:50%;background:var(--forest);color:var(--cream)}
-.gate-card .lock svg{width:20px;height:20px}
-.gate-card h2{margin:0 0 .5rem;font-size:1.4rem}
-.gate-card p{margin:0 0 1.4rem;color:var(--muted);font-size:.95rem}
-.gate-card form{display:flex;flex-direction:column;gap:.85rem}
-.gate-card input{
-  font:inherit;font-size:1rem;padding:.8rem 1rem;border-radius:12px;
-  border:1.6px solid var(--rule-strong);background:var(--bg);color:var(--fg);text-align:center;letter-spacing:.1em;
-}
-.gate-card input:focus-visible{outline:2.5px solid var(--gold);outline-offset:2px}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;text-decoration:none;
-  padding:.85rem 1.5rem;border-radius:999px;font-weight:700;font-size:1rem;cursor:pointer;
-  border:1.6px solid transparent;background:var(--rust-bright);color:#fff;
-  transition:transform .2s var(--ease),background-color .2s ease;
-}
-.btn:hover{transform:translateY(-2px);background:var(--rust)}
-.gate-error{color:var(--rust-bright);font-size:.88rem;font-weight:700;margin-top:1rem}
+@keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes halo{0%{box-shadow:0 0 0 0 rgba(224,138,46,.4)}70%{box-shadow:0 0 0 18px rgba(224,138,46,0)}100%{box-shadow:0 0 0 0 rgba(224,138,46,0)}}
 @keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-6px)}40%,60%{transform:translateX(6px)}}
 .shake{animation:shake .45s}
 
-/* quick links + contacts */
-.qlinks{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.1rem;margin-bottom:2.8rem}
-.qlink{
-  position:relative;display:flex;align-items:center;gap:1rem;text-decoration:none;
-  border:1.5px solid var(--rule);border-radius:18px;padding:1.1rem 1.2rem;background:var(--card);
-  box-shadow:0 2px 0 rgba(20,38,27,.04);transition:transform .25s var(--ease),border-color .25s ease,box-shadow .25s ease;
-}
+/* =============================================================
+   AT A GLANCE
+   ============================================================= */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.1rem}
+.tile{position:relative;overflow:hidden;border:1.5px solid var(--rule);border-radius:18px;padding:1.15rem 1.25rem 1.2rem;background:var(--card);box-shadow:0 2px 0 rgba(20,38,27,.04);display:grid;gap:.35rem;align-content:start;transition:transform .25s var(--ease),border-color .25s ease,box-shadow .25s ease}
+.tile:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:var(--shadow)}
+.tile .k{font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:.5rem}
+.tile .k svg{width:15px;height:15px}
+.tile .v{font-family:var(--display);font-weight:500;font-size:1.55rem;line-height:1.15;letter-spacing:-.01em}
+.tile .v small{font:600 .82rem var(--text);color:var(--muted);margin-left:.3rem}
+.tile .d{font-size:.86rem;color:var(--muted);line-height:1.4}
+.tile .pill{display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.22rem .6rem;border-radius:999px;background:rgba(224,138,46,.16);color:var(--meta);width:max-content}
+.tile .pill.soon{background:var(--gold);color:#2A1A06}
+.tile .pill.on{background:rgba(21,64,36,.12);color:var(--accent)}
+.tile .pill i{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+.tile .pill.on i{animation:none;box-shadow:0 0 0 3px rgba(21,64,36,.12)}
+.tile .bar{height:8px;border-radius:999px;background:rgba(20,38,27,.1);overflow:hidden;margin-top:.5rem}
+.tile .fill{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--gold),var(--rust-bright));transition:width 1.3s var(--ease) .25s}
+.tile .fill.go{width:var(--pct)}
+.tile .edit{position:absolute;right:.9rem;top:.9rem;width:32px;height:32px;border-radius:50%;border:1.4px solid var(--rule);display:grid;place-items:center;color:var(--muted);text-decoration:none;transition:all .25s var(--ease)}
+.tile .edit svg{width:14px;height:14px}
+.tile:hover .edit{background:var(--gold);border-color:var(--gold);color:#2A1A06;box-shadow:0 0 14px 2px rgba(224,138,46,.5)}
+.tile .dots{display:flex;gap:.28rem;margin-top:.45rem;flex-wrap:wrap}
+.tile .dots i{width:14px;height:14px;border-radius:4px;background:rgba(20,38,27,.12);transition:background-color .3s ease}
+.tile .dots i.y{background:var(--forest)}
+:root[data-theme="dark"] .tile .dots i,:root:not([data-theme="light"]) .tile .dots i{background:rgba(241,232,211,.14)}
+:root[data-theme="dark"] .tile .dots i.y{background:var(--accent)}
+
+/* =============================================================
+   ACTIONS
+   ============================================================= */
+.actions{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:1.1rem}
+@media (max-width:860px){.actions{grid-template-columns:1fr}}
+.act{position:relative;display:flex;flex-direction:column;gap:.9rem;text-decoration:none;overflow:hidden;border:1.5px solid var(--rule);border-radius:20px;padding:1.4rem 1.4rem 1.3rem;background:var(--card);box-shadow:0 2px 0 rgba(20,38,27,.04);transition:transform .25s var(--ease),border-color .25s ease,box-shadow .25s ease;min-height:170px}
+.act::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);transform:translateX(-120%);transition:transform .6s var(--ease);pointer-events:none}
+.act:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:var(--shadow)}
+.act:hover::before{transform:translateX(120%)}
+.act .ic{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;background:var(--forest);color:var(--cream);transition:transform .25s var(--ease),box-shadow .25s ease}
+.act:hover .ic{transform:scale(1.08) rotate(-4deg);box-shadow:0 0 0 3px rgba(224,138,46,.25),0 0 22px 4px rgba(224,138,46,.55)}
+.act .ic svg{width:24px;height:24px}
+.act strong{font-family:var(--display);font-weight:500;font-size:1.3rem;line-height:1.2;display:block}
+.act span.t{font-size:.9rem;color:var(--muted);line-height:1.45}
+.act .go{margin-top:auto;display:inline-flex;align-items:center;gap:.45rem;font-size:.85rem;font-weight:700;color:var(--accent)}
+.act .go svg{width:15px;height:15px;transition:transform .2s var(--ease)}
+.act:hover .go svg{transform:translateX(3px)}
+.act.primary{background:var(--forest);color:var(--cream);border-color:var(--forest);background-image:radial-gradient(110% 80% at 80% 0%,#1E5A34 0%,#154024 42%,#0C2916 100%)}
+.act.primary span.t{color:rgba(243,231,200,.75)}
+.act.primary .ic{background:var(--gold);color:#2A1A06}
+.act.primary .go{color:var(--gold-soft)}
+.act.primary::after{content:"";position:absolute;right:-18%;bottom:-40%;width:70%;aspect-ratio:1;border-radius:50%;border:1.5px solid rgba(243,231,200,.14);pointer-events:none}
+.act .badge{position:absolute;top:1rem;right:1rem;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .55rem;border-radius:999px;background:var(--gold);color:#2A1A06}
+
+/* =============================================================
+   HOW IT GOES LIVE
+   ============================================================= */
+.flow{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:.5rem}
+@media (max-width:760px){.flow{grid-template-columns:1fr}}
+.flow svg.line{position:absolute;left:0;right:0;top:34px;width:100%;height:4px;pointer-events:none;overflow:visible}
+.flow svg.line path{fill:none;stroke:var(--rule-strong);stroke-width:2;stroke-dasharray:6 6}
+.flow svg.line path.ink{stroke:var(--gold);stroke-dasharray:1;stroke-dashoffset:1;stroke-width:2.5}
+.flow.in svg.line path.ink{transition:stroke-dashoffset 1.6s var(--ease-draw) .2s;stroke-dashoffset:0}
+@media (max-width:760px){.flow svg.line{display:none}}
+.step{position:relative;text-align:center;padding:0 .6rem}
+.step .n{position:relative;z-index:1;width:68px;height:68px;margin:0 auto .9rem;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1.6px solid var(--rule-strong);color:var(--accent);font-family:var(--display);font-size:1.5rem;font-weight:500;transition:transform .5s var(--ease),background-color .4s ease,color .4s ease,border-color .4s ease,box-shadow .4s ease}
+.flow.in .step .n{background:var(--forest);color:var(--cream);border-color:var(--forest);box-shadow:0 0 0 4px rgba(224,138,46,.22),0 12px 26px rgba(20,38,27,.18)}
+.flow.in .step:nth-child(3) .n{transition-delay:.45s}.flow.in .step:nth-child(4) .n{transition-delay:1.1s}
+@media (prefers-reduced-motion: no-preference){.flow.in .step .n{animation:popn .55s var(--ease) both}.flow.in .step:nth-child(3) .n{animation-delay:.45s}.flow.in .step:nth-child(4) .n{animation-delay:1.1s}}
+@keyframes popn{0%{transform:scale(.7)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+.step strong{display:block;font-family:var(--display);font-weight:500;font-size:1.15rem;margin-bottom:.3rem}
+.step p{margin:0;font-size:.9rem;color:var(--muted)}
+.step p b{color:var(--fg);font-weight:600}
+
+/* =============================================================
+   QUICK LINKS + CONTACTS + ROLES (kept from the old admin page)
+   ============================================================= */
+.two{display:grid;grid-template-columns:1.1fr .9fr;gap:2.5rem}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+.qlinks{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.qlink{position:relative;display:flex;align-items:center;gap:1rem;text-decoration:none;border:1.5px solid var(--rule);border-radius:18px;padding:1rem 1.1rem;background:var(--card);box-shadow:0 2px 0 rgba(20,38,27,.04);transition:transform .25s var(--ease),border-color .25s ease,box-shadow .25s ease}
 .qlink:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:var(--shadow)}
 .qlink .ic{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;background:var(--forest);color:var(--cream);transition:transform .25s var(--ease),box-shadow .25s ease}
 .qlink:hover .ic{transform:scale(1.08) rotate(-4deg);box-shadow:0 0 0 3px rgba(224,138,46,.25),0 0 20px 4px rgba(224,138,46,.55)}
 .qlink .ic svg{width:20px;height:20px}
 .qlink .lbl strong{display:block;font-family:var(--display);font-weight:500;font-size:1.02rem;line-height:1.2}
-.qlink .lbl span{display:block;font-size:.83rem;color:var(--muted);margin-top:.1rem}
+.qlink .lbl span{display:block;font-size:.82rem;color:var(--muted);margin-top:.1rem}
+.qlink[data-placeholder]::after{content:"Add link";position:absolute;right:.9rem;top:.75rem;font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--rule-strong);border-radius:999px;padding:.15rem .45rem}
+.contacts{list-style:none;margin:0;padding:0;display:grid;gap:.7rem}
+.contacts li{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding:.75rem 1rem;border:1.5px solid var(--rule);border-radius:14px;background:var(--card);transition:border-color .2s ease,transform .2s var(--ease)}
+.contacts li:hover{border-color:var(--gold);transform:translateX(3px)}
+.contacts .nm{font-family:var(--display);font-weight:500;font-size:1.02rem}
+.contacts .rl{color:var(--muted);font-size:.85rem}
+.contacts .rl em{font-style:normal;display:inline-block;font-size:.64rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#2A1A06;background:var(--gold);padding:.12rem .45rem;border-radius:999px;margin-left:.3rem;vertical-align:middle}
+.contacts a{font-size:.85rem;font-weight:700;color:var(--accent);text-decoration:none;border-bottom:1.5px solid currentColor}
 
-.contacts{list-style:none;margin:0;padding:0;display:grid;gap:.9rem}
-.contacts li{
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
-  padding:.9rem 1.1rem;border:1.5px solid var(--rule);border-radius:14px;background:var(--card);
-}
-.contacts .nm{font-family:var(--display);font-weight:500;font-size:1.05rem}
-.contacts .rl{color:var(--muted);font-size:.88rem}
-.contacts a{font-size:.9rem;font-weight:700;color:var(--accent);text-decoration:none;border-bottom:1.5px solid currentColor}
+.roles{width:100%;min-width:640px;border-collapse:collapse;font-size:.9rem;background:var(--card);border:1.5px solid var(--rule);border-radius:16px;overflow:hidden}
+.roles th,.roles td{padding:.7rem .9rem;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+.roles th{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--veil)}
+.roles tr:last-child td{border-bottom:0}
+.roles td:first-child{font-family:var(--display);font-weight:500;font-size:1rem;white-space:nowrap}
+.roles .y{color:var(--accent);font-weight:700}.roles .n{color:var(--muted)}
+.roles-wrap{overflow-x:auto;border-radius:16px}
+.note{margin-top:1rem;font-size:.85rem;color:var(--muted)}
+.note a{color:var(--accent)}
 
-/* footer */
-.foot{background:var(--forest-deep);background-image:linear-gradient(180deg,#0F3119 0%,#0C2916 100%);color:var(--cream);padding:3rem 0 2rem}
+/* =============================================================
+   FOOTER
+   ============================================================= */
+.foot{background:var(--forest-deep);background-image:linear-gradient(180deg,#0F3119 0%,#0C2916 100%);color:var(--cream);padding:3rem 0 2rem;margin-top:2rem}
 .stripe{display:flex;height:5px;width:100%;margin-bottom:2.2rem;border-radius:999px;overflow:hidden}
 .stripe i{flex:1;background:var(--forest)}
 .stripe i.r{flex:0 0 3.4rem;background:var(--rust-bright)}
@@ -182,7 +281,10 @@ h2{font-family:var(--display);font-weight:400;font-size:clamp(1.5rem,3vw,2rem);l
 .foot small{opacity:.58;font-size:.82rem}
 .totop{display:inline-flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:700;border:1.4px solid rgba(243,231,200,.3);border-radius:999px;padding:.4rem .9rem;text-decoration:none;color:var(--cream);transition:all .2s var(--ease)}
 .totop:hover{background:var(--gold);border-color:var(--gold);color:#2A1A06}
+.totop svg{width:14px;height:14px}
 </style>
+<!-- Netlify Identity: sign-in for the committee; also handles invite / recovery links. -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 
@@ -200,71 +302,186 @@ h2{font-family:var(--display);font-weight:400;font-size:clamp(1.5rem,3vw,2rem);l
       <li><a href="index.html#events">Events</a></li>
       <li><a href="index.html#photos">Photos</a></li>
       <li><a href="index.html#charity">Charity</a></li>
-      <li><a href="admin.html" class="active">Admin</a></li>
+      <li><a href="dashboard.html" class="active">Admin</a></li>
     </ul>
   </div>
 </nav>
 
 <!-- ===================== PAGE HEADER ===================== -->
 <header class="pagehead">
-  <div class="wrap matra">
-    <span class="kicker">Admin</span>
-    <h1>Committee <em>admin</em></h1>
-    <p>A private space for committee business — notes, planning and shared resources. Committee members only.</p>
+  <div class="wrap head-grid">
+    <div class="matra">
+      <span class="kicker">Committee</span>
+      <h1 id="headline">Committee <em>dashboard</em></h1>
+      <p id="headsub">Sign in to see what's live, open the editor and keep the site up to date. Committee members only.</p>
+    </div>
+    <div class="who" id="who">
+      <span class="av" id="whoAv">?</span>
+      <span><b id="whoName">Signed in</b><small id="whoMail"></small></span>
+      <button type="button" id="signOut">Sign out</button>
+    </div>
   </div>
 </header>
 
 <main>
-  <!-- ===================== PASSWORD GATE ===================== -->
+
+  <!-- ===================== SIGN-IN GATE ===================== -->
   <div class="gate" id="gate">
-    <div class="gate-card">
-      <span class="lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg></span>
-      <h2>Members only</h2>
-      <p>Enter the admin password to continue.</p>
-      <form id="gateForm" autocomplete="off">
-        <input type="password" id="gateInput" placeholder="Password" required inputmode="numeric">
-        <button type="submit" class="btn">Unlock</button>
-      </form>
-      <p class="gate-error" id="gateError" hidden>Incorrect password — try again.</p>
+    <div class="gate-card" id="gateCard">
+      <span class="lock" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10" rx="2.5"/><path class="shackle" d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+      </span>
+      <h2>Committee sign-in</h2>
+      <p>Use the account from your invitation email. Nothing to register — accounts are invite only.</p>
+      <button type="button" class="btn" id="signIn">Sign in <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <p class="gate-status" id="gateStatus" hidden></p>
+      <p class="fine">No account yet? Ask the President or Secretary for an invite. Forgotten your password? Sign in &rarr; <em>Forgot password</em>.</p>
+      <div class="local" id="localHint" hidden>
+        <button type="button" id="localPreview">Preview without signing in (local development only)</button>
+      </div>
     </div>
   </div>
 
-  <!-- ===================== COMMITTEE CONTENT ===================== -->
+  <!-- ===================== SIGNED-IN CONTENT ===================== -->
   <div id="committeeContent" hidden>
+
+    <!-- At a glance -->
     <section class="section">
       <div class="wrap">
-        <h2>Quick links</h2>
-        <div class="qlinks">
-          <a class="qlink" href="#" data-placeholder>
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 13h6M9 17h6"/></svg></span>
-            <span class="lbl"><strong>Meeting notes</strong><span>Shared doc of minutes</span></span>
-          </a>
-          <a class="qlink" href="#" data-placeholder>
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 9l10 6 10-6-10-6Z"/><path d="M2 15l10 6 10-6M2 9v6M22 9v6"/></svg></span>
-            <span class="lbl"><strong>Shared drive</strong><span>Files, designs and templates</span></span>
-          </a>
-          <a class="qlink" href="#" data-placeholder>
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M8 15h4"/></svg></span>
-            <span class="lbl"><strong>Budget tracker</strong><span>Spending and event costs</span></span>
-          </a>
-          <a class="qlink" href="#" data-placeholder>
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 11.8a8.4 8.4 0 0 1-12.3 7.45L3.6 20.4l1.2-4.4A8.4 8.4 0 1 1 20.4 11.8Z"/></svg></span>
-            <span class="lbl"><strong>Committee chat</strong><span>WhatsApp group for exec</span></span>
-          </a>
+        <h2>On the site <em>right now</em></h2>
+        <p class="sub">Read straight from the same files the editor writes. If it's here, it's what visitors see.</p>
+        <div class="tiles">
+          <div class="tile reveal" style="--i:0" id="tileEvent">
+            <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Next event</span>
+            <span class="v" id="evTitle">&hellip;</span>
+            <span class="d" id="evWhen"></span>
+            <span class="pill" id="evPill" hidden><i></i><span></span></span>
+            <a class="edit" href="admin/#/collections/events" aria-label="Edit events"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16v4Z"/><path d="M12.5 7.5l4 4"/></svg></a>
+          </div>
+          <div class="tile reveal" style="--i:1" id="tileBanner">
+            <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v9H9l-5 4V5Z"/></svg>Announcement</span>
+            <span class="v" id="bnState">&hellip;</span>
+            <span class="d" id="bnMsg"></span>
+            <a class="edit" href="admin/#/collections/settings/entries/banner" aria-label="Edit the announcement"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16v4Z"/><path d="M12.5 7.5l4 4"/></svg></a>
+          </div>
+          <div class="tile reveal" style="--i:2" id="tileCharity">
+            <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg>Charity</span>
+            <span class="v"><span id="chRaised">&pound;0</span><small id="chTarget"></small></span>
+            <span class="d" id="chCause"></span>
+            <div class="bar"><div class="fill" id="chFill" style="--pct:0%"></div></div>
+            <a class="edit" href="admin/#/collections/settings/entries/charity" aria-label="Edit the charity total"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16v4Z"/><path d="M12.5 7.5l4 4"/></svg></a>
+          </div>
+          <div class="tile reveal" style="--i:3" id="tilePhotos">
+            <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5"/></svg>Photos</span>
+            <span class="v"><span id="phCount">0</span><small id="phOf"></small></span>
+            <span class="d" id="phNote"></span>
+            <div class="dots" id="phDots" aria-hidden="true"></div>
+            <a class="edit" href="admin/#/collections/photos" aria-label="Edit photos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16v4Z"/><path d="M12.5 7.5l4 4"/></svg></a>
+          </div>
         </div>
-
-        <h2>Contacts</h2>
-        <ul class="contacts">
-          <li><span><span class="nm">Raidah</span> <span class="rl">— President</span></span><a href="mailto:#" data-placeholder>Email</a></li>
-          <li><span><span class="nm">Shanjeda</span> <span class="rl">— Vice President</span></span><a href="mailto:#" data-placeholder>Email</a></li>
-          <li><span><span class="nm">Shabab</span> <span class="rl">— Secretary</span></span><a href="mailto:#" data-placeholder>Email</a></li>
-          <li><span><span class="nm">Ibrahim</span> <span class="rl">— Treasurer</span></span><a href="mailto:#" data-placeholder>Email</a></li>
-          <li><span><span class="nm">Anah</span> <span class="rl">— Events Manager</span></span><a href="mailto:#" data-placeholder>Email</a></li>
-          <li><span><span class="nm">Hamim</span> <span class="rl">— Events Manager (VIP Volunteer)</span></span><a href="mailto:#" data-placeholder>Email</a></li>
-          <li><span><span class="nm">Rashdan</span> <span class="rl">— Media / Videography (VIP Volunteer)</span></span><a href="mailto:#" data-placeholder>Email</a></li>
-        </ul>
       </div>
     </section>
+
+    <!-- Actions -->
+    <section class="section">
+      <div class="wrap">
+        <h2>What do you want to <em>do?</em></h2>
+        <div class="actions">
+          <a class="act primary reveal" style="--i:0" href="admin/">
+            <span class="badge">Start here</span>
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4l10-10-4-4L4 16v4Z"/><path d="M12.5 7.5l4 4"/></svg></span>
+            <span><strong>Open the editor</strong><span class="t">Add an event, upload photos, update the charity total or switch the announcement on. Saves go for approval, then live.</span></span>
+            <span class="go">Go to the editor <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="act reveal" style="--i:1" href="#" id="prLink" target="_blank" rel="noopener">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="8" r="2.5"/><path d="M6 8.5v7M18 10.5c0 3-3 4-6 4H8.5"/></svg></span>
+            <span><strong>Review changes</strong><span class="t" id="prText">Approvers: see what's waiting for sign-off on GitHub and approve or merge it.</span></span>
+            <span class="go">Open pull requests <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+          </a>
+          <a class="act reveal" style="--i:2" href="index.html" target="_blank" rel="noopener">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
+            <span><strong>View the live site</strong><span class="t">Check how the homepage looks to visitors after a change has gone live.</span></span>
+            <span class="go">Open homepage <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it goes live -->
+    <section class="section">
+      <div class="wrap">
+        <h2>How a change <em>goes live</em></h2>
+        <p class="sub">Nothing you save is public straight away. Every edit is checked by an approver first, so there's no way to break the site by accident.</p>
+        <div class="flow" id="flow">
+          <svg class="line" viewBox="0 0 100 4" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M16 2 H84"/>
+            <path class="ink" d="M16 2 H84" pathLength="1"/>
+          </svg>
+          <div class="step reveal" style="--i:0"><span class="n">1</span><strong>You edit</strong><p>In the editor, make the change and press <b>Save</b>. It sits in <b>Drafts</b> until you move it to <b>In review</b>.</p></div>
+          <div class="step reveal" style="--i:2"><span class="n">2</span><strong>An approver checks it</strong><p>The President or Secretary gets the change as a pull request on GitHub and <b>approves</b> it. Money and link changes also need the Treasurer.</p></div>
+          <div class="step reveal" style="--i:4"><span class="n">3</span><strong>It goes live</strong><p>Press <b>Publish</b> (or merge on GitHub). Netlify rebuilds the site and the change is up within a minute.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Links + contacts -->
+    <section class="section">
+      <div class="wrap two">
+        <div>
+          <h2>Quick links</h2>
+          <div class="qlinks">
+            <a class="qlink reveal" style="--i:0" href="#" data-placeholder>
+              <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 13h6M9 17h6"/></svg></span>
+              <span class="lbl"><strong>Meeting notes</strong><span>Shared doc of minutes</span></span>
+            </a>
+            <a class="qlink reveal" style="--i:1" href="#" data-placeholder>
+              <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 9l10 6 10-6-10-6Z"/><path d="M2 15l10 6 10-6M2 9v6M22 9v6"/></svg></span>
+              <span class="lbl"><strong>Shared drive</strong><span>Files, designs and templates</span></span>
+            </a>
+            <a class="qlink reveal" style="--i:2" href="#" data-placeholder>
+              <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M8 15h4"/></svg></span>
+              <span class="lbl"><strong>Budget tracker</strong><span>Spending and event costs</span></span>
+            </a>
+            <a class="qlink reveal" style="--i:3" href="#" data-placeholder>
+              <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 11.8a8.4 8.4 0 0 1-12.3 7.45L3.6 20.4l1.2-4.4A8.4 8.4 0 1 1 20.4 11.8Z"/></svg></span>
+              <span class="lbl"><strong>Committee chat</strong><span>WhatsApp group for exec</span></span>
+            </a>
+          </div>
+          <p class="note">Placeholder links &mdash; edit the four <code>href</code>s in <code>dashboard.html</code> once the docs exist.</p>
+        </div>
+        <div>
+          <h2>Contacts</h2>
+          <ul class="contacts">
+            <li class="reveal" style="--i:0"><span><span class="nm">Raidah</span> <span class="rl">&mdash; President<em>Approver</em></span></span><a href="mailto:#" data-placeholder>Email</a></li>
+            <li class="reveal" style="--i:1"><span><span class="nm">Shanjeda</span> <span class="rl">&mdash; Vice President</span></span><a href="mailto:#" data-placeholder>Email</a></li>
+            <li class="reveal" style="--i:2"><span><span class="nm">Shabab</span> <span class="rl">&mdash; Secretary<em>Approver</em></span></span><a href="mailto:#" data-placeholder>Email</a></li>
+            <li class="reveal" style="--i:3"><span><span class="nm">Ibrahim</span> <span class="rl">&mdash; Treasurer<em>Money &amp; links</em></span></span><a href="mailto:#" data-placeholder>Email</a></li>
+            <li class="reveal" style="--i:4"><span><span class="nm">Anah</span> <span class="rl">&mdash; Events Manager</span></span><a href="mailto:#" data-placeholder>Email</a></li>
+            <li class="reveal" style="--i:5"><span><span class="nm">Hamim</span> <span class="rl">&mdash; Events Manager (VIP Volunteer)</span></span><a href="mailto:#" data-placeholder>Email</a></li>
+            <li class="reveal" style="--i:6"><span><span class="nm">Rashdan</span> <span class="rl">&mdash; Media / Videography (VIP Volunteer)</span></span><a href="mailto:#" data-placeholder>Email</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roles -->
+    <section class="section">
+      <div class="wrap">
+        <h2>Who can do <em>what</em></h2>
+        <div class="roles-wrap reveal">
+          <table class="roles">
+            <thead><tr><th>Role</th><th>Events &amp; photos</th><th>Announcement</th><th>Charity &amp; links</th><th>Approve &amp; publish</th></tr></thead>
+            <tbody>
+              <tr><td>Committee member</td><td class="y">Edit &rarr; review</td><td class="y">Edit &rarr; review</td><td class="n">Please don't</td><td class="n">&mdash;</td></tr>
+              <tr><td>President &amp; Secretary</td><td class="y">Edit &rarr; review</td><td class="y">Edit &rarr; review</td><td class="y">President</td><td class="y">Yes, on GitHub</td></tr>
+              <tr><td>Treasurer</td><td class="y">Edit &rarr; review</td><td class="y">Edit &rarr; review</td><td class="y">Yes</td><td class="n">Reviews money &amp; links</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">"Please don't" is an agreement, not a lock &mdash; the editor can't hide screens per person. What <em>is</em> locked: only approvers can publish, and charity/link changes need the Treasurer's or President's tick. Full detail in <a href="admin/ROLES.md">admin/ROLES.md</a>.</p>
+      </div>
+    </section>
+
   </div>
 </main>
 
@@ -273,57 +490,194 @@ h2{font-family:var(--display);font-weight:400;font-size:clamp(1.5rem,3vw,2rem);l
   <div class="wrap">
     <div class="stripe"><i></i><i class="r"></i><i></i></div>
     <div class="foot-bottom">
-      <small>&copy; 2026 University of Leicester Bangla Society. Admin area — committee members only. Replace the placeholder links above.</small>
+      <small>&copy; 2026 University of Leicester Bangla Society. Committee dashboard &mdash; the page is public HTML, so keep private documents in the linked drives.</small>
       <a class="totop" href="index.html">Back to site <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></a>
     </div>
   </div>
 </footer>
 
 <script>
+// =============================================================================
+//  SETTINGS — the two things to fill in after deploying (see SETUP.md)
+// =============================================================================
+var GITHUB_REPO = '';       // e.g. 'uol-bangla-society/bangla-society-site' → "Review changes" links to its PRs
+var IDENTITY_URL = '';      // only for local previews: 'https://<your-site>.netlify.app/.netlify/identity'
+
 // ---- mobile menu ----
 (function () {
   var btn = document.querySelector('.nav-toggle'), menu = document.getElementById('menu');
-  btn.addEventListener('click', function () {
-    var open = menu.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open));
-  });
-  menu.addEventListener('click', function (e) {
-    if (e.target.tagName === 'A') { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
-  });
+  btn.addEventListener('click', function () { var open = menu.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open)); });
+  menu.addEventListener('click', function (e) { if (e.target.tagName === 'A') { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); } });
 })();
 
-// ---- password gate ----
-// NOTE: this is a client-side gate for casual privacy only, not real security —
-// anyone who views this page's source can read the password and the gated content.
-(function () {
-  var PASSWORD = '1234';
-  var gate = document.getElementById('gate');
-  var content = document.getElementById('committeeContent');
-  var form = document.getElementById('gateForm');
-  var input = document.getElementById('gateInput');
-  var error = document.getElementById('gateError');
-  var card = document.querySelector('.gate-card');
+// ---- scroll reveal + bars + the flow line ----
+var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var watch = (function () {
+  function show(el) {
+    if (el.classList.contains('reveal')) el.classList.add('in');
+    if (el.classList.contains('fill')) el.classList.add('go');
+    if (el.classList.contains('flow')) el.classList.add('in');
+    if (el.hasAttribute('data-count')) countUp(el);
+  }
+  var io = ('IntersectionObserver' in window && !reduce) ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } });
+  }, { threshold: 0.15 }) : null;
+  return function (root) {
+    var items = (root || document).querySelectorAll('.reveal:not(.in), .fill:not(.go), .flow:not(.in), [data-count]:not(.counted)');
+    if (!io) { items.forEach(show); return; }
+    items.forEach(function (el) { io.observe(el); });
+  };
+})();
 
-  function unlock() {
-    gate.hidden = true;
-    content.hidden = false;
-    try { sessionStorage.setItem('bsocCommitteeUnlocked', '1'); } catch (e) {}
+// countUp(el): animate the number in el from 0 to data-count. Prefix (£) is
+// kept from data-prefix. With reduced motion, it just sets the final value.
+function countUp(el) {
+  if (el.classList.contains('counted')) return;
+  el.classList.add('counted');
+  var target = +el.getAttribute('data-count') || 0, prefix = el.getAttribute('data-prefix') || '';
+  var fmt = function (n) { return prefix + Math.round(n).toLocaleString('en-GB'); };
+  if (reduce || target === 0) { el.textContent = fmt(target); return; }
+  var start = null, dur = 1200;
+  function tick(t) {
+    if (!start) start = t;
+    var p = Math.min(1, (t - start) / dur), eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(target * eased);
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+// =============================================================================
+//  SIGN-IN (Netlify Identity)
+//  The widget handles the modal, password reset and invite acceptance. We just
+//  react to its events. See the note at the top of the file about what this
+//  gate does and doesn't protect.
+// =============================================================================
+(function () {
+  var gate = document.getElementById('gate'), card = document.getElementById('gateCard');
+  var content = document.getElementById('committeeContent');
+  var who = document.getElementById('who');
+  var status = document.getElementById('gateStatus');
+  var widget = window.netlifyIdentity;
+  var isLocal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+
+  function unlock(user) {
+    var name = (user && user.user_metadata && user.user_metadata.full_name) || (user && user.email ? user.email.split('@')[0] : 'Committee');
+    var first = name.split(/[\s.]+/)[0];
+    document.getElementById('whoName').textContent = name;
+    document.getElementById('whoMail').textContent = (user && user.email) || 'local preview';
+    document.getElementById('whoAv').textContent = first.charAt(0).toUpperCase();
+    document.getElementById('headline').innerHTML = 'Hello, <em>' + first.replace(/[<>&]/g, '') + '</em>';
+    document.getElementById('headsub').textContent = 'Here’s what’s live on the site and where to change it.';
+    who.classList.add('on');
+    card.classList.add('open');
+    // Let the padlock swing open before the page changes underneath it.
+    setTimeout(function () {
+      gate.hidden = true; content.hidden = false;
+      watch(content);
+      loadOverview();
+    }, reduce ? 0 : 420);
+  }
+  function lock() {
+    who.classList.remove('on'); card.classList.remove('open');
+    content.hidden = true; gate.hidden = false;
+    document.getElementById('headline').innerHTML = 'Committee <em>dashboard</em>';
+    document.getElementById('headsub').textContent = 'Sign in to see what’s live, open the editor and keep the site up to date. Committee members only.';
   }
 
-  try {
-    if (sessionStorage.getItem('bsocCommitteeUnlocked') === '1') unlock();
-  } catch (e) {}
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    if (input.value === PASSWORD) {
-      unlock();
-    } else {
-      error.hidden = false;
-      card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
-      input.value = ''; input.focus();
-    }
+  document.getElementById('signIn').addEventListener('click', function () {
+    if (!widget) { status.hidden = false; status.textContent = 'The sign-in widget failed to load — check your connection and reload.'; card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake'); return; }
+    widget.open('login');
   });
+  document.getElementById('signOut').addEventListener('click', function () { if (widget && widget.currentUser()) widget.logout(); else lock(); });
+
+  if (widget) {
+    widget.on('init', function (user) { if (user) unlock(user); else lock(); });
+    widget.on('login', function (user) { unlock(user); widget.close(); });
+    widget.on('logout', lock);
+    widget.on('error', function (err) { status.hidden = false; status.textContent = (err && err.message) || 'Sign-in failed. Try again.'; });
+    if (IDENTITY_URL) widget.init({ APIUrl: IDENTITY_URL });
+  }
+
+  // Local development: Identity has no site to talk to, so offer a preview.
+  // This is only shown when the page is served from localhost — on the real
+  // site the button doesn't exist.
+  if (isLocal && !IDENTITY_URL) {
+    document.getElementById('localHint').hidden = false;
+    document.getElementById('localPreview').addEventListener('click', function () { unlock({ email: 'you@localhost', user_metadata: { full_name: 'Local preview' } }); });
+  }
 })();
+
+// =============================================================================
+//  OVERVIEW — read the same content files the homepage uses
+// =============================================================================
+function loadOverview() {
+  function getJSON(url, fallback) {
+    return fetch(url, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).catch(function () { return fallback; });
+  }
+  function isoDate(s) { var d = new Date(String(s || '').slice(0, 10) + 'T00:00:00'); return isNaN(d) ? null : d; }
+  function money(n) { return '£' + Math.round(+n || 0).toLocaleString('en-GB'); }
+
+  // "Review changes" → the repo's PR list once GITHUB_REPO is set.
+  var pr = document.getElementById('prLink');
+  if (GITHUB_REPO) { pr.href = 'https://github.com/' + GITHUB_REPO + '/pulls'; }
+  else { pr.href = 'admin/#/workflow'; pr.removeAttribute('target'); document.getElementById('prText').textContent = 'See drafts and changes waiting for review in the editor’s Workflow tab. (Set GITHUB_REPO in dashboard.html to link straight to GitHub.)'; }
+
+  Promise.all([
+    getJSON('content/events.json', []),
+    getJSON('content/photos.json', []),
+    getJSON('content/settings/charity.json', {}),
+    getJSON('content/settings/banner.json', { enabled: false })
+  ]).then(function (r) {
+    var events = r[0], photos = r[1], charity = r[2], banner = r[3];
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+
+    // --- next event
+    var upcoming = events.filter(function (e) { var d = isoDate(e.date); return e.published !== false && d && d >= today; })
+      .sort(function (a, b) { return a.date.localeCompare(b.date); });
+    var drafts = events.filter(function (e) { return e.published === false; }).length;
+    var ev = upcoming[0], pill = document.getElementById('evPill');
+    if (ev) {
+      var d = isoDate(ev.date), days = Math.round((d - today) / 86400000);
+      document.getElementById('evTitle').textContent = ev.title;
+      document.getElementById('evWhen').textContent = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long' }) + (ev.time ? ' · ' + ev.time : '') + (ev.venue ? ' · ' + ev.venue : '');
+      pill.hidden = false;
+      pill.querySelector('span').textContent = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : 'In ' + days + ' days' + (upcoming.length > 1 ? ' · ' + (upcoming.length - 1) + ' more' : '');
+      pill.classList.toggle('soon', days <= 7);
+    } else {
+      document.getElementById('evTitle').textContent = 'Nothing scheduled';
+      document.getElementById('evWhen').textContent = 'Add the next event so the homepage has something to point at.' + (drafts ? ' (' + drafts + ' draft' + (drafts > 1 ? 's' : '') + ' hidden)' : '');
+    }
+
+    // --- banner
+    var on = !!(banner && banner.enabled && (banner.message || '').trim());
+    document.getElementById('bnState').textContent = on ? 'Showing' : 'Off';
+    document.getElementById('bnMsg').textContent = on ? '“' + banner.message.trim() + '”' : (banner && banner.message ? 'Saved but switched off: “' + banner.message.trim() + '”' : 'No message saved yet.');
+    var bp = document.createElement('span'); bp.className = 'pill' + (on ? ' on' : ''); bp.innerHTML = '<i></i><span>' + (on ? 'Live on the homepage' : 'Hidden') + '</span>';
+    document.getElementById('tileBanner').insertBefore(bp, document.getElementById('tileBanner').querySelector('.edit'));
+
+    // --- charity
+    var raised = +charity.raised || 0, target = +charity.target || 0;
+    var pct = target > 0 ? Math.max(0, Math.min(100, Math.round(raised / target * 100))) : 0;
+    var chRaised = document.getElementById('chRaised');
+    chRaised.setAttribute('data-count', raised); chRaised.setAttribute('data-prefix', '£');
+    document.getElementById('chTarget').textContent = 'of ' + money(target) + ' · ' + pct + '%';
+    document.getElementById('chCause').textContent = (charity.cause || '').trim() ? 'For ' + charity.cause.trim() + (charity.donate_url ? '' : ' · no donate link yet') : 'No cause named yet' + (charity.donate_url ? '' : ' · no donate link yet');
+    document.getElementById('chFill').style.setProperty('--pct', pct + '%');
+
+    // --- photos
+    var withImg = photos.filter(function (p) { return p.image; }).length;
+    var phCount = document.getElementById('phCount');
+    phCount.setAttribute('data-count', withImg);
+    document.getElementById('phOf').textContent = 'of ' + photos.length + ' tiles have a picture';
+    document.getElementById('phNote').textContent = withImg === photos.length && photos.length ? 'Every tile is filled.' : (photos.length - withImg) + ' still showing a patterned placeholder.';
+    var dots = document.getElementById('phDots');
+    photos.forEach(function (p) { var i = document.createElement('i'); if (p.image) i.className = 'y'; dots.appendChild(i); });
+
+    watch(content);   // counts and bars animate as they scroll into view
+  });
+  var content = document.getElementById('committeeContent');
+}
 </script>
 </body>
 </html>
