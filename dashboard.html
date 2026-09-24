@@ -311,6 +311,9 @@ dialog.signin::backdrop{background:rgba(6,20,11,.62);backdrop-filter:blur(4px);-
 .si-err{margin:0;background:rgba(199,74,39,.12);color:var(--rust-bright);border-radius:10px;padding:.6rem .8rem;font-size:.86rem;font-weight:600}
 .si-alt{margin:0;font-size:.85rem;color:var(--muted);text-align:center}
 @media (prefers-reduced-motion: no-preference){dialog.signin[open]{animation:dlgIn .35s var(--ease)}}
+dialog.ask{width:min(400px,92vw)}
+.ask-msg{margin:0;font-size:1.02rem;line-height:1.5}
+.ask-btns{display:flex;justify-content:flex-end;gap:.6rem;flex-wrap:wrap}
 @keyframes dlgIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
 
 /* drawer */
@@ -691,6 +694,14 @@ html.locked{overflow:hidden}
       <button class="btn" type="submit" id="siGo">Sign in</button>
       <p class="si-alt">Just looking? <button type="button" class="linkish" id="siDemo">Try the demo</button>. It works the same, but nothing is saved.</p>
     </div>
+  </form>
+</dialog>
+
+<!-- ===================== CONFIRM ===================== -->
+<dialog class="signin ask" id="ask" aria-labelledby="askMsg">
+  <form class="si-body" id="askForm" novalidate>
+    <p class="ask-msg" id="askMsg"></p>
+    <div class="ask-btns"><button type="button" class="btn btn-sm btn-ghost" id="askNo">Cancel</button><button type="submit" class="btn btn-sm" id="askYes">OK</button></div>
   </form>
 </dialog>
 
@@ -1291,7 +1302,7 @@ function openPanel(name, arg) {
 }
 function closeDrawer(force) {
   if (drawer.hidden || busy) return;
-  if (!force && dirty && !confirm('Close without publishing? Your changes will be lost.')) return;
+  if (!force && dirty) return unsaved('Close without publishing? Your changes will be lost.', function () { closeDrawer(true); });
   dirty = false;
   drawer.classList.remove('open'); scrim.classList.remove('open');
   document.documentElement.classList.remove('locked');
@@ -1299,15 +1310,17 @@ function closeDrawer(force) {
   if (opener && opener.focus) opener.focus();
 }
 function navigate(name, arg) {
-  if (dirty && !confirm('Leave without publishing? Your changes will be lost.')) return;
-  if (view) stack.push(view.ref);
-  show(name, arg);
+  unsaved('Leave without publishing? Your changes will be lost.', function () {
+    if (view) stack.push(view.ref);
+    show(name, arg);
+  });
 }
 function goBack() {
   if (!stack.length) return closeDrawer();
-  if (dirty && !confirm('Go back without publishing? Your changes will be lost.')) return;
-  var ref = stack.pop();
-  show(ref.name, ref.arg);
+  unsaved('Go back without publishing? Your changes will be lost.', function () {
+    var ref = stack.pop();
+    show(ref.name, ref.arg);
+  });
 }
 function show(name, arg) {
   var body = $('drBody'), foot = $('drFoot');
@@ -1380,14 +1393,14 @@ drawer.addEventListener('click', function (e) {
   if (e.target.closest('[data-cancel]')) { goBack(); return; }
   var del = e.target.closest('[data-del]');
   if (del && view.del && !busy) {
-    if (!confirm(view.delConfirm || 'Delete this?')) return;
-    withBusy(del, 'Deleting…', view.del());
+    var v = view;
+    ask(v.delConfirm || 'Delete this?', 'Delete', 'Keep it').then(function (yes) { if (yes && view === v) withBusy(del, 'Deleting…', v.del()); });
   }
 });
 $('drClose').addEventListener('click', function () { closeDrawer(); });
 $('drBack').addEventListener('click', goBack);
 scrim.addEventListener('click', function () { closeDrawer(); });
-document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !drawer.hidden && !$('signin').open) closeDrawer(); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !drawer.hidden && !$('signin').open && !$('ask').open) closeDrawer(); });
 
 // Every [data-open] on the page (tiles, pencils, action cards) opens a view.
 document.addEventListener('click', function (e) {
@@ -1713,6 +1726,32 @@ var VIEWS = {
     };
   }
 };
+
+// =============================================================================
+//  ASK — an in-page "are you sure?" box, in place of the browser's own pop-up
+// =============================================================================
+function ask(message, yes, no) {
+  var dlg = $('ask');
+  if (typeof dlg.showModal !== 'function') return Promise.resolve(window.confirm(message));
+  return new Promise(function (resolve) {
+    $('askMsg').textContent = message; $('askYes').textContent = yes; $('askNo').textContent = no || 'Cancel';
+    function done(answer) {
+      $('askForm').onsubmit = null; $('askNo').onclick = null; dlg.oncancel = null;
+      if (dlg.open) dlg.close();
+      resolve(answer);
+    }
+    $('askForm').onsubmit = function (e) { e.preventDefault(); done(true); };
+    $('askNo').onclick = function () { done(false); };
+    dlg.oncancel = function (e) { e.preventDefault(); done(false); };
+    dlg.showModal();
+    $('askNo').focus();
+  });
+}
+// unsaved(message, then): run `then` straight away, or after checking it's fine to drop the edits.
+function unsaved(message, then) {
+  if (!dirty) return then();
+  ask(message, 'Discard changes', 'Keep editing').then(function (yes) { if (yes) { dirty = false; then(); } });
+}
 
 // =============================================================================
 //  TOASTS
