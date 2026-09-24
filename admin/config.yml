@@ -23,7 +23,7 @@
 # create the site there (SETUP.md step 3).
 backend:
   name: git-gateway            # DecapBridge speaks the same protocol as Netlify's old Git Gateway
-  repo: GITHUB-USERNAME/bangla-society-site      # ← your GitHub user/org + repo
+  repo: Rashdan16/bangla-society-site
   branch: main
   identity_url: https://auth.decapbridge.com/sites/DECAPBRIDGE-SITE-ID   # ← from DecapBridge
   gateway_url: https://gateway.decapbridge.com

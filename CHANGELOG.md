@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026-09-24] - Set GitHub repo in CMS config
+- admin/config.yml: replaced the `GITHUB-USERNAME` placeholder with
+  `Rashdan16/bangla-society-site` so Decap commits to the right repo.
+  The DecapBridge site ID placeholder is still pending.
+- Files affected: admin/config.yml, CHANGELOG.md
+
 ## [2026-09-18] - Host on Vercel with DecapBridge login
 - Replaced netlify.toml with vercel.json (build command, output dir, redirects,
   headers). Editor login moves from Netlify Identity + Git Gateway to
