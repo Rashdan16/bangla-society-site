@@ -125,8 +125,11 @@ async function git(req, res, path, query) {
   let body;
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     body = await readBody(req);
-    // Record who made the change: the name typed at login.
-    if (path === 'git/commits' && req.method === 'POST') {
+    // Record who made the change: the name typed at login. The editor commits
+    // through git/commits; the dashboard writes single files through contents/.
+    const isCommit = path === 'git/commits' && req.method === 'POST';
+    const isFileWrite = path.startsWith('contents/') && (req.method === 'PUT' || req.method === 'DELETE');
+    if (isCommit || isFileWrite) {
       const commit = JSON.parse(body.toString('utf8'));
       commit.author = { name: claims.sub, email: COMMIT_EMAIL, date: new Date().toISOString() };
       body = Buffer.from(JSON.stringify(commit));

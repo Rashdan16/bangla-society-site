@@ -3,7 +3,6 @@
   "framework": null,
   "buildCommand": "node scripts/index-content.js",
   "outputDirectory": ".",
-  "trailingSlash": false,
   "rewrites": [
     { "source": "/api/cms/(.*)", "destination": "/api/cms?__p=$1" }
   ],

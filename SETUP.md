@@ -87,9 +87,10 @@ way, paste it over `GITHUB_TOKEN` and redeploy.
 ## 5. Give the committee access
 
 Send them the password and the link to
-`https://<your-domain>/dashboard.html`: it shows what's live and has the
-**Open the editor** button. In the editor they type their name (it's recorded
-on each change) and the password.
+`https://<your-domain>/dashboard.html`: it shows what's live, and after
+**Sign in to edit** (their name, recorded on each change, plus the password)
+every card on it opens an editing panel. Anyone curious can try
+`/dashboard.html?demo` first; it saves nothing.
 
 To lock someone out, change `CMS_PASSWORD` in Vercel and redeploy; everyone is
 logged out and needs the new one.
@@ -97,7 +98,7 @@ logged out and needs the new one.
 ## 6. Day-to-day: how a change goes live
 
 ```
-member edits in /admin/  →  Publish  →  commit on main  →  Vercel rebuilds (~1 min)  →  live
+member edits on the dashboard (or /admin/)  →  Publish  →  commit on main  →  Vercel rebuilds (~1 min)  →  live
 ```
 
 There is no review step. If someone publishes something wrong, fix it in the

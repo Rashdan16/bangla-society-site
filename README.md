@@ -6,7 +6,7 @@ Static site: `index.html` + `assets/`, with the content the committee edits in
 ## Structure
 
     index.html                 the public homepage (HTML + CSS + JS inline)
-    dashboard.html             committee dashboard: see what's live, open the editor
+    dashboard.html             committee dashboard: see what's live and edit it in place
     admin/                     the editor (Decap CMS): index.html, config.yml, cms.js, preview.css
     admin/ROLES.md             who can do what, and how to add a committee member
     content/events/*.md        one file per event   → content/events.json (generated)
@@ -31,7 +31,11 @@ directly no longer works. To try the editor without logging in, also run
 
 ## Editing content
 
-Committee members sign in at `/dashboard.html` and click **Open the editor**.
+Committee members sign in at `/dashboard.html` (name + committee password),
+then press any card or pencil: announcement, charity total, events and photos
+all edit in a panel on that page. `/admin/` (the full Decap editor) is still
+there for everything else, e.g. the social links. `/dashboard.html?demo` tries
+the dashboard without saving anything.
 Pressing Publish commits to `main` and Vercel rebuilds the site in about a
 minute. Login is one shared committee password (checked by `api/cms.js`); nobody needs an account.
 Details: `SETUP.md` (one-off setup) and `admin/ROLES.md` (day-to-day roles).

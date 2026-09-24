@@ -1,6 +1,7 @@
 # Who can do what — committee editing
 
-The site is edited through the committee editor at **`/admin/`**. Pressing
+The site is edited on the committee dashboard at **`/dashboard.html`** (sign
+in, then press any card), or in the full editor at **`/admin/`**. Pressing
 **Publish** puts a change live straight away — there is no approval step. This
 page says what is *enforced by software* and what is *just an agreement*.
 
@@ -36,7 +37,7 @@ page says what is *enforced by software* and what is *just an agreement*.
 
 ## Undoing a mistake (maintainer)
 
-- **Small fix:** just open `/admin/`, correct it, Publish.
+- **Small fix:** just open the dashboard (or `/admin/`), correct it, Publish.
 - **Roll the whole site back:** Vercel → *Deployments* → the last good one →
   ⋯ → **Instant Rollback**. The editor keeps working.
 - **Restore one file:** on GitHub, open the commit history of the file, or
