@@ -13,13 +13,15 @@
   /admin/  — the Decap CMS editor.
 
   Decap is a React app loaded from a CDN; it reads /admin/config.yml for what to
-  edit and /admin/cms.js for the live previews. Login is handled by DecapBridge
-  (configured in config.yml) — Decap shows its own email/password form for it.
-  This page only adds two things of our own:
+  edit and /admin/cms.js for the live previews. Login is one shared committee
+  password, checked by /api/cms.js — Decap shows its own login form for it.
+  This page only adds three things of our own:
     1. a branded loading screen (the CMS bundle is ~1 MB, so there's a moment
        of nothing otherwise), and
-    2. a light theme so the editor uses the society's colours and fonts.
-  Neither changes how Decap works — remove both and it still runs.
+    2. a light theme so the editor uses the society's colours and fonts, and
+    3. relabels the login form: "Email" becomes "Your name" (it's only used
+       to show who made each change), "Password" the committee password.
+  None of these changes how Decap works — remove both and it still runs.
 -->
 <style>
 :root{
@@ -192,6 +194,26 @@ body{font-family:var(--text)}
   });
   mo.observe(document.body, { childList: true, subtree: true });
   setTimeout(finish, MAX);
+})();
+
+// ---- relabel Decap's login form for the shared-password login ----
+// Decap's form says "Email" / "Password". There are no accounts here, so the
+// first box just asks for a name (recorded on each change) and the second for
+// the committee password.
+(function () {
+  function relabel() {
+    var name = document.querySelector('#nc-root input[name="email"]');
+    var pass = document.querySelector('#nc-root input[name="password"]');
+    if (name && name.placeholder !== 'Your name') {
+      name.placeholder = 'Your name';
+      name.setAttribute('autocomplete', 'name');
+    }
+    if (pass && pass.placeholder !== 'Committee password') {
+      pass.placeholder = 'Committee password';
+      pass.setAttribute('autocomplete', 'current-password');
+    }
+  }
+  new MutationObserver(relabel).observe(document.body, { childList: true, subtree: true });
 })();
 </script>
 </body>

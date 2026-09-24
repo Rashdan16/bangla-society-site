@@ -1,5 +1,20 @@
 # Changelog
 
+## [2026-09-24] - Editor login is one shared committee password (DecapBridge dropped)
+- New `api/cms.js` Vercel function: checks the password from the
+  `CMS_PASSWORD` env var and forwards the editor's GitHub requests using
+  `GITHUB_TOKEN`, restricted to the repo endpoints publishing needs. Sessions
+  last two weeks; changing the password logs everyone out. Commits carry the
+  name typed at login.
+- `admin/config.yml` backend now points at `/api/cms/auth` and
+  `/api/cms/git/github`; `vercel.json` adds the `/api/cms/*` rewrite and
+  no-store/noindex headers for `/api/`.
+- `admin/index.html` relabels Decap's login boxes to "Your name" and
+  "Committee password".
+- Dashboard, SETUP.md (step 3 and 5 rewritten), ROLES.md, README updated.
+- Files affected: api/cms.js (new), admin/config.yml, admin/index.html,
+  vercel.json, dashboard.html, SETUP.md, admin/ROLES.md, README.md, CHANGELOG.md
+
 ## [2026-09-24] - Set GitHub repo in CMS config
 - admin/config.yml: replaced the `GITHUB-USERNAME` placeholder with
   `Rashdan16/bangla-society-site` so Decap commits to the right repo.

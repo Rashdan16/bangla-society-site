@@ -14,7 +14,7 @@ Static site: `index.html` + `assets/`, with the content the committee edits in
     content/settings/*.json    links, charity total, announcement banner
     scripts/index-content.js   builds the two generated JSON files (Node, no deps)
     vercel.json                deploy settings, redirects, headers
-    SETUP.md                   the full runbook (Vercel, DecapBridge, your domain)
+    SETUP.md                   the full runbook (Vercel, the editor password, your domain)
     assets/logo.png            society crest
     assets/committee-*.jpg     the seven "Meet the 2026 Committee" cards
     assets/photos/             gallery uploads from the editor
@@ -33,12 +33,13 @@ directly no longer works. To try the editor without logging in, also run
 
 Committee members sign in at `/dashboard.html` and click **Open the editor**.
 Pressing Publish commits to `main` and Vercel rebuilds the site in about a
-minute. Login is through DecapBridge; no GitHub accounts needed for members.
+minute. Login is one shared committee password (checked by `api/cms.js`); nobody needs an account.
 Details: `SETUP.md` (one-off setup) and `admin/ROLES.md` (day-to-day roles).
 
 ## Things still to fill in
 
-- `admin/config.yml`: `repo`, `identity_url` (from DecapBridge), `site_url` / `display_url`
+- Vercel environment variables: `CMS_PASSWORD`, `GITHUB_TOKEN` (SETUP.md step 3)
+- `admin/config.yml`: `site_url` / `display_url`
 - `dashboard.html`: the four quick links, contact emails
 - Through the editor: WhatsApp link, SU membership link, donate link, photos
 

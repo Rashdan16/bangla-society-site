@@ -5,7 +5,7 @@
 #
 #  ┌─ ACCESS CONTROL: WHAT IS REAL AND WHAT IS CONVENTION ─────────────────────┐
 #  │ REAL (enforced by software):                                               │
-#  │  • Only people invited through DecapBridge can log in.                    │
+#  │  • Only people who know the committee password can log in.              │
 #  │  • Every save is a git commit on `main`, so anything can be undone by the │
 #  │    site maintainer (git revert / Vercel "instant rollback").               │
 #  │ CONVENTION (not enforced — anyone logged in can open every screen):        │
@@ -16,17 +16,17 @@
 #  └────────────────────────────────────────────────────────────────────────────┘
 # =============================================================================
 
-# ── Login + commits: DecapBridge (https://decapbridge.com) ─────────────────────
-# DecapBridge is a small hosted service that gives Decap an email/password login
-# and commits to GitHub on the editor's behalf. Members never need GitHub
-# accounts. The two placeholders come from the DecapBridge dashboard after you
-# create the site there (SETUP.md step 3).
+# ── Login + commits: one shared committee password ──────────────────────────
+# /api/cms.js (a small Vercel function) checks the password and commits to
+# GitHub with a token stored in Vercel. Nobody needs an account: whoever knows
+# the password can publish. Set CMS_PASSWORD and GITHUB_TOKEN in Vercel
+# (SETUP.md step 3); change CMS_PASSWORD to lock everyone out.
 backend:
-  name: git-gateway            # DecapBridge speaks the same protocol as Netlify's old Git Gateway
+  name: git-gateway            # /api/cms speaks the Git Gateway protocol Decap expects
   repo: Rashdan16/bangla-society-site
   branch: main
-  identity_url: https://auth.decapbridge.com/sites/DECAPBRIDGE-SITE-ID   # ← from DecapBridge
-  gateway_url: https://gateway.decapbridge.com
+  identity_url: /api/cms/auth
+  gateway_url: /api/cms/git/github
   commit_messages:
     create:      "content: add {{collection}} “{{slug}}”"
     update:      "content: update {{collection}} “{{slug}}”"

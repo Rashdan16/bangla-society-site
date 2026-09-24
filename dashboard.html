@@ -13,7 +13,8 @@
   dashboard.html — the committee's front door.
 
   See what's live right now and jump into /admin/ to change it. The login lives
-  inside the editor (DecapBridge), so this page has no gate of its own.
+  inside the editor (one shared committee password), so this page has no gate
+  of its own.
 
   Honest note: everything on this page is public. That's fine — it only shows
   what the homepage already shows, plus names and placeholder links. Keep
@@ -285,11 +286,11 @@ h2 em{font-style:italic;color:var(--accent)}
     <div class="matra">
       <span class="kicker">Committee</span>
       <h1 id="headline">Committee <em>dashboard</em></h1>
-      <p id="headsub">What's live on the site right now, and where to change it. You'll be asked to sign in when you open the editor.</p>
+      <p id="headsub">What's live on the site right now, and where to change it. You'll be asked for the committee password when you open the editor.</p>
     </div>
     <a class="who on" href="admin/">
       <span class="av" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10-4-4L4 16v4Z"/><path d="M12.5 7.5l4 4"/></svg></span>
-      <span><b>Open the editor</b><small>Sign in with your invite email</small></span>
+      <span><b>Open the editor</b><small>Use the committee password</small></span>
     </a>
   </div>
 </header>
@@ -423,15 +424,15 @@ h2 em{font-style:italic;color:var(--accent)}
         <h2>Who can do <em>what</em></h2>
         <div class="roles-wrap reveal">
           <table class="roles">
-            <thead><tr><th>Role</th><th>Events &amp; photos</th><th>Announcement</th><th>Charity &amp; links</th><th>Undo &amp; invites</th></tr></thead>
+            <thead><tr><th>Role</th><th>Events &amp; photos</th><th>Announcement</th><th>Charity &amp; links</th><th>Undo &amp; password</th></tr></thead>
             <tbody>
               <tr><td>Committee member</td><td class="y">Publish</td><td class="y">Publish</td><td class="n">Please don't</td><td class="n">&mdash;</td></tr>
               <tr><td>President &amp; Treasurer</td><td class="y">Publish</td><td class="y">Publish</td><td class="y">Publish</td><td class="n">&mdash;</td></tr>
-              <tr><td>Site maintainer (Rashdan)</td><td class="y">Publish</td><td class="y">Publish</td><td class="y">Publish</td><td class="y">Roll back, invite, remove</td></tr>
+              <tr><td>Site maintainer (Rashdan)</td><td class="y">Publish</td><td class="y">Publish</td><td class="y">Publish</td><td class="y">Roll back, change password</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="note">"Please don't" is an agreement, not a lock &mdash; the editor can't hide screens per person. Nobody needs a GitHub account: you sign in to the editor with the email you were invited on. Full detail in <a href="admin/ROLES.md">admin/ROLES.md</a>.</p>
+        <p class="note">"Please don't" is an agreement, not a lock &mdash; the editor can't hide screens per person. Nobody needs an account: open the editor, type your name and the committee password. Full detail in <a href="admin/ROLES.md">admin/ROLES.md</a>.</p>
       </div>
     </section>
 

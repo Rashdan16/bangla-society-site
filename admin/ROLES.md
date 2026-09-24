@@ -16,10 +16,11 @@ page says what is *enforced by software* and what is *just an agreement*.
 
 ## What is REAL access control
 
-1. **Logging in.** Accounts are invite only. Nobody can register themselves;
-   the maintainer sends invites from the DecapBridge dashboard.
+1. **Logging in.** One shared committee password. Anyone who knows it can
+   publish, so share it only with the committee. To lock someone out, the
+   maintainer changes it (see *Changing the password* below).
 2. **Everything is recorded.** Every Publish is a git commit on `main` with the
-   editor's name on it. Nothing is ever lost — the maintainer can restore any
+   name typed at login on it. Nothing is ever lost — the maintainer can restore any
    earlier version (see *Undoing a mistake* below).
 
 ## What is CONVENTION (not enforced)
@@ -43,27 +44,34 @@ page says what is *enforced by software* and what is *just an agreement*.
 
 ## Adding a new committee member (handover checklist)
 
-1. **DecapBridge → the site → Manage collaborators → Invite.** Enter their
-   email. They get a link, set a password and land in the editor.
+1. Tell them the committee password and send them the link to
+   `/dashboard.html`. That's it.
 2. Update the table at the top of this file and the contacts on
    `dashboard.html`.
-3. **Leaving?** DecapBridge → Manage collaborators → remove them. Their past
-   edits stay in git history (fine).
+3. **Someone leaving, or the password got out?** Change the password (below)
+   and tell the remaining committee. Past edits stay in git history (fine).
+
+## Changing the password (maintainer)
+
+**Vercel → the project → Settings → Environment Variables → `CMS_PASSWORD` →
+Edit**, save, then **Deployments → latest → ⋯ → Redeploy**. Everyone is logged
+out and needs the new password. Pick something long (a short phrase is good):
+anyone with it can change the site.
 
 ## Handing over the maintainer role
 
-The maintainer is whoever owns the GitHub repo, the Vercel project and the
-DecapBridge site. To hand over: on GitHub, *Settings → Collaborators → Add* the
-new person, then *Transfer ownership*; on Vercel, *Settings → Members* (or
-transfer the project); on DecapBridge, add them as a site owner. Then they
-generate their own GitHub token for DecapBridge. Each is a five-minute job.
+The maintainer is whoever owns the GitHub repo and the Vercel project. To
+hand over: on GitHub, *Settings → Collaborators → Add* the new person, then
+*Transfer ownership*; on Vercel, *Settings → Members* (or transfer the
+project). Then they generate their own GitHub token and replace
+`GITHUB_TOKEN` in Vercel (SETUP.md step 3). Each is a five-minute job.
 
 ## Where the settings live
 
 | Setting | Where |
 |---|---|
-| Who can log in | DecapBridge → the site → Manage collaborators |
-| The GitHub token DecapBridge commits with | DecapBridge → the site → settings (regenerate on GitHub when it expires) |
+| The committee password | Vercel → the project → Settings → Environment Variables → `CMS_PASSWORD` |
+| The GitHub token the editor commits with | same place → `GITHUB_TOKEN` (regenerate on GitHub when it expires) |
 | Hosting, domain, rollbacks | Vercel → the project |
 | Publishing mode (instant vs. reviewed) | `admin/config.yml` → `publish_mode` |
 | What the editor can edit | `admin/config.yml` |
