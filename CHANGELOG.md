@@ -1,5 +1,27 @@
 # Changelog
 
+## [2026-09-24] - Dashboard buttons work: fix the /admin/ redirect loop, edit in place
+- Fixed: every "Open the editor" / pencil / card link went into an endless
+  redirect (`/admin/` → `/admin` → `/admin/` …) because `vercel.json` had
+  `trailingSlash: false` fighting the `/admin` → `/admin/` redirect. Removed
+  `trailingSlash`; `/admin/` loads again.
+- `dashboard.html` is now a working editor. "Sign in to edit" (name + committee
+  password, same login as `/admin/`), then every tile pencil and action card
+  opens a slide-in panel: announcement (on/off, message, link, live preview),
+  charity total (quick "+ £" buttons, bar preview), events (list, add, edit,
+  hide as draft, delete, card preview) and photos (upload with drag and drop,
+  shrunk to ≤1600px JPEG in the browser; caption, tile size, order; add/delete
+  tiles). Publish writes the file through `/api/cms`, and the tile shows
+  "Going live…" until the homepage has the change, then "Update is live".
+  Edits made by someone else in the meantime are caught instead of overwritten.
+- Demo mode (`/dashboard.html?demo`, or "Try the demo" in the sign-in box)
+  runs the same panels on an in-browser copy; nothing is saved.
+- `api/cms.js`: single-file writes through the contents API also carry the
+  signed-in name as the commit author.
+- README, SETUP.md and admin/ROLES.md point committee members at the dashboard.
+- Files affected: vercel.json, dashboard.html, api/cms.js, README.md, SETUP.md,
+  admin/ROLES.md, CHANGELOG.md
+
 ## [2026-09-24] - Editor login is one shared committee password (DecapBridge dropped)
 - New `api/cms.js` Vercel function: checks the password from the
   `CMS_PASSWORD` env var and forwards the editor's GitHub requests using
